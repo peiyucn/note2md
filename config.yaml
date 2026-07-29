@@ -28,15 +28,6 @@ paths:
   notes_dir: "./notes"
   templates_dir: "./notes/.templates"
 
-# ---- 导入引导 ----
-onboarding:
-  # 用户首次导入 OneNote 后的自动分析
-  auto_analyze: true
-  # 分析后自动生成模板（需要用户确认）
-  auto_suggest_templates: true
-  # 模板最少样本数：某种类型笔记至少 N 篇才生成模板
-  min_samples_for_template: 3
-
 # ---- 上下文管理 ----
 context:
   max_notebooks_before_suggest: 5

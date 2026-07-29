@@ -1,6 +1,6 @@
 ---
 name: onenote2md
-description: Agent-native Markdown note management in the OneNote style. Slash commands: /init (setup or re-import OneNote), /newnotebook, /newsection, /newpage (template-first, falls back to blank page), /archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
+description: Agent-native Markdown note management in the OneNote style. Slash commands: /help, /init, /newnotebook, /newsection, /newpage (template-first), /newtemplate, /securecheck, /archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
 ---
 
 # onenote2md — Agent-Native Markdown Note Management
@@ -33,6 +33,8 @@ You are the interface to the user's note system. All notes use the same **Notebo
 | `/newnotebook [name]` | Create a notebook under `{notes_root}` |
 | `/newsection [notebook] [section]` | Create a section inside a notebook |
 | `/newpage` | Create a page — pick template or blank, ask destination, build it |
+| `/newtemplate` | Extract a template from a section of similar pages |
+| `/securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
 | `/archive` | Archive a notebook, section, or single page |
 
 ---
@@ -49,6 +51,7 @@ Commands:
   /newnotebook    Create a new notebook
   /newsection     Create a section inside a notebook  
   /newpage        Write a note (pick a template — diary, meeting, quick note, or blank)
+  /newtemplate    Extract a template from a section of similar notes
   /archive        Clean up old notebooks, sections, or pages
 
 First time?
@@ -58,9 +61,13 @@ First time?
 Templates?
   /newpage always offers templates. The plugin comes with diary, meeting, and quick-note.
   Add your own under notes/.templates/ — they'll appear automatically.
+  /newtemplate extracts a template from any section with similar pages.
 
 OneNote?
   /init handles the full import. Windows + OneNote desktop required for auto-export.
+
+Security?
+  /securecheck checks your notes for passwords, ID numbers, bank cards, and API tokens.
 
 Questions? Just ask — you don't need to memorize commands.
 
@@ -119,7 +126,7 @@ If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
 Question: "⚠️ {notes_root}/ already has notes. Import will OVERWRITE them. Continue?"
 Options: "Overwrite and import" | "Cancel"
 ```
-If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, suggest auto-generating templates.
+If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `/newtemplate` on any section with similar pages to create templates."
 
 #### Fresh Start Path
 
@@ -284,6 +291,49 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ---
 
+## `/securecheck` — Security Check
+
+Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Use `grep_search` or read files directly.
+
+### Patterns to Detect
+
+| Category | Pattern / Keyword |
+|----------|-------------------|
+| Passwords | `password`, `passwd`, `pwd`, `password`, `secret`, `密码` near `=` or `:` |
+| National ID | 18-digit Chinese ID pattern: `/\d{6}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]/` |
+| SSN (US) | `/\d{3}-\d{2}-\d{4}/` |
+| Passport | `passport`, `护照`, patterns: `/E\d{7,8}/`, `/G\d{7,8}/` (Chinese), `/\d{9}/` (US) |
+| Driver's license | `driver`, `驾照`, `DL-`, `license` near alphanumeric patterns |
+| Bank cards | 16–19 digit sequences, `card`, `银行卡`, `credit` |
+| API keys / tokens | `api_key`, `token`, `secret`, `sk-`, `ghp_`, `gho_`, `Bearer`, `Authorization` |
+| Phone numbers | Chinese mobile `1[3-9]\d{9}`, international `\+\d{7,15}` |
+| Email | `[...]@[...]` — flag if found in unexpected contexts |
+
+### Procedure
+
+1. Announce: "Scanning your notes for sensitive information…"
+2. Search across `{notes_root}/` (skip `_archive/` and `.templates/`)
+3. For each match:
+   - Report the file path and line number
+   - Show the matching category (NOT the actual sensitive value)
+   - Example: `⚠️ notes/Work/项目/密码本.md:12 — Possible password`
+4. **Never output the actual sensitive value.** Use `[REDACTED]` if context is needed.
+5. Summary: "Found N potential issues across M files."
+6. Remind: "You can move sensitive files to _archive/ or delete them. Use /archive to clean up."
+
+### Scope Options
+
+If user wants targeted scan:
+```
+Question: "Scan everything, or a specific area?"
+Options:
+  - "All notebooks (recommended)"
+  - "A specific notebook"
+  - "A specific section"
+```
+
+---
+
 ## Template System
 
 ### Priority
@@ -303,11 +353,26 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ### Creating User Templates
 
-**Auto-generate (recommended):** After OneNote import, group pages by `type:`. For types with ≥ N samples (`config.yaml` → `onboarding.min_samples_for_template`), extract common structure and propose via `askQuestions`. User confirms → write to `{notes_root}/.templates/`.
+**`/newtemplate` — Extract template from a section:**
+
+1. Ask: which notebook → which section to analyze.
+2. Give the user a chance to describe their needs before extracting:
+   ```
+   Question: "I'll analyze the pages in '{Section}' to build a template. Any specific requirements?"
+   Options:
+     - "No preference — just find the common structure" (default)
+     - "Let me describe what I want" (free text input)
+   ```
+3. Read all `.md` pages in that section. If the user provided requirements, use them to guide the extraction (e.g. "focus on the action items section", "combine the agenda and notes patterns").
+4. Compare their structure to find common patterns:
+   - Same frontmatter keys appearing in ≥ 60% of pages → keep as `{{VARIABLE}}`
+   - Same heading hierarchy (##, ###) → keep the skeleton
+   - Body text that varies → replace with representative {{PLACEHOLDER}}
+5. Show the extracted template and report: "Found N pages with similar structure in '{Section}'."
+6. Ask: "Save this template? Give it a name."
+7. Write to `{notes_root}/.templates/{name}.md`. From now on, `/newpage` will include it.
 
 **Manual:** Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `/newpage`.
-
-**Refresh:** User says "update my templates" → re-analyze all notes.
 
 ---
 
@@ -336,10 +401,6 @@ Requires Windows + Office 2016+, COM API.
 ### Phase 2 — Convert
 
 Run `<skill_dir>/tools/convert-xml2md.py` → converts XML to `{notes_root}/` preserving Notebook→Section→Page. `onenote_export/` is temporary — remind user to delete it.
-
-### Phase 3 — Analyze & Generate Templates
-
-Scan all `.md` files, cluster by `type:`, propose template generation to `{notes_root}/.templates/`.
 
 ---
 
