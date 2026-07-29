@@ -2,7 +2,7 @@
 
 [简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/note2md)
 
-> OneNote-style Markdown notes, managed through slash commands.
+> Markdown notes with Notebook→Section→Page hierarchy, managed through slash commands.
 
 ## Why
 

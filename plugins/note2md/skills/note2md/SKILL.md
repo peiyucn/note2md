@@ -1,6 +1,6 @@
 ---
 name: note2md
-description: Agent-native Markdown note management in the OneNote style. Slash commands: /n2m:help, /n2m:init, /n2m:newnotebook, /n2m:newsection, /n2m:newpage (template-first), /n2m:newtemplate, /n2m:securecheck, /n2m:archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
+description: Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: /n2m:help, /n2m:init, /n2m:newnotebook, /n2m:newsection, /n2m:newpage (template-first), /n2m:newtemplate, /n2m:securecheck, /n2m:archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
 ---
 
 # note2md — Agent-Native Markdown Note Management

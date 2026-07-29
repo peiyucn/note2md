@@ -2,7 +2,7 @@
 
 简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/note2md)
 
-> OneNote 风格的 Markdown 笔记，通过斜杠命令管理。
+> Markdown 笔记，按笔记本→分区→页面三层结构组织，通过斜杠命令管理。
 
 ## 为什么用这个
 
