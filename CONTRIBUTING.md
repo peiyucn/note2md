@@ -18,7 +18,9 @@ onenote2md/
 > `notes/` and `.templates/` are user-space — they do not live in this repo.
 ```
 
-## How It Works
+## Guiding Principle
+
+**Notebook → Section → Page is the foundation.** Every note lives at `{Notebook}/{Section}/{page}.md`. Do not add other directory levels or flatten the hierarchy. The agent's navigation, search, and archive logic all depend on this three-level structure. Before adding any feature, confirm it respects this constraint.
 
 `SKILL.md` is the single source of truth. It defines every command, every interaction flow, and every convention. Agents (Copilot, Claude Code, Codex) load it and follow it.
 
@@ -39,3 +41,5 @@ Drop a `.md` file into `plugins/onenote2md/skills/onenote2md/templates/`.
 - Templates are just Markdown with optional frontmatter and `{{VARIABLE}}` placeholders.
 - If the template starts with `---` YAML frontmatter, it will be used as-is (with placeholders filled).
 - If not, the agent auto-generates frontmatter with `date`, `type` (from the filename), `title`, and `tags`.
+
+> [中文版](CONTRIBUTING.zh-CN.md)
