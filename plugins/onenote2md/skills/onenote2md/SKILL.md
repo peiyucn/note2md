@@ -26,12 +26,42 @@ You are the interface to the user's note system. All notes use the same **Notebo
 
 | Command | What it does |
 |---------|-------------|
+| `/help` | Show this quick-start guide |
 | `/init` | Setup wizard — pick language, choose root path, import or start fresh |
 | `/newnotebook [name]` | Create a notebook under `{notes_root}` |
 | `/newsection [notebook] [section]` | Create a section inside a notebook |
 | `/newpage` | Create a page — pick template or blank, ask destination, build it |
-| Archive ("归档") | Move old notebooks into `_archive/` |
 | `/archive` | Archive a notebook, section, or single page |
+
+---
+
+## `/help` — Quick-Start Guide
+
+When the user types `/help`, reply with a concise guide in their chosen language (default English):
+
+```
+📓 onenote2md — Your Markdown Notebook
+
+Commands:
+  /init           First-time setup (import OneNote or start fresh)
+  /newnotebook    Create a new notebook
+  /newsection     Create a section inside a notebook  
+  /newpage        Write a note (pick a template — diary, meeting, quick note, or blank)
+  /archive        Clean up old notebooks, sections, or pages
+
+First time?
+  Type /init to import your OneNote or create your first notebook.
+  Then /newnotebook → /newsection → /newpage to start writing.
+
+Templates?
+  /newpage always offers templates. The plugin comes with diary, meeting, and quick-note.
+  Add your own under notes/.templates/ — they'll appear automatically.
+
+OneNote?
+  /init handles the full import. Windows + OneNote desktop required for auto-export.
+
+Questions? Just ask — you don't need to memorize commands.
+```
 
 ---
 

@@ -12,37 +12,42 @@
 
 ## 安装
 
-### 1. 添加市场
+### VS Code Copilot
 
-在你的 Agent 环境（VS Code、Claude Code 等）中添加市场：
+1. 添加市场：`https://github.com/peiyucn/onenote2md`
+2. 在市场中选择 `onenote2md` 安装
+
+### Claude Code
 
 ```
-https://github.com/peiyucn/onenote2md
+/marketplace add https://github.com/peiyucn/onenote2md
+```
+```
+/plugin install onenote2md
 ```
 
-### 2. 安装插件
+## 使用
 
-在市场中选择 `onenote2md` 安装。
+所有命令在 VS Code Copilot 和 Claude Code 中完全一致：
 
-### 3. 开始使用
-
-安装后直接输入命令：
-
-- **首次使用：** 输入 `/init` 开始 — 选择导入 OneNote 或从头创建
-
-## 命令系统
-
-插件提供统一的斜杠命令，**在 Copilot、Claude Code、Codex 中用法完全一致**：
+```bash
+/init                    # 首次设置 — 选择语言，导入 OneNote 或从头开始
+/newnotebook Work        # 创建笔记本
+/newsection Work 周报     # 创建分区
+/newpage                 # 创建笔记 — 选择模板（日记/会议/快速笔记/空白）
+/archive                 # 归档 — 笔记本、分区或单个页面
+```
 
 | 命令 | 用途 | 示例 |
 |------|------|------|
+| `/help` | 显示快速入门指南 | `/help` |
 | `/init` | 初始化（导入或新建） | `/init` |
 | `/newnotebook` | 创建笔记本 | `/newnotebook Work` |
 | `/newsection` | 在笔记本中创建分区 | `/newsection Work 周报` |
 | `/newpage` | 创建笔记页（模板优先，可选空白） | `/newpage` |
 | `/archive` | 归档笔记本、分区或页面 | `/archive` |
 
-> 💡 `/init` 首次设置笔记本目录。如果已有笔记再运行，会提示确认后覆盖导入。
+> 💡 `/init` 首次设置笔记目录。如果已有笔记再运行，会提示确认后覆盖导入。
 
 ## 笔记模型（OneNote 风格）
 

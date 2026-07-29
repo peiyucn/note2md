@@ -1,7 +1,6 @@
 ---
 note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻译，仅供作者对照检查。不被任何 Agent 加载。修改 SKILL.md 时必须同步更新本文。
 ---
-
 # onenote2md — Agent 原生 Markdown 笔记管理
 
 你是用户笔记系统的交互界面。所有笔记和 OneNote 一样，按 **笔记本 → 分区 → 页面** 三层组织。
@@ -19,20 +18,50 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 
 > `{notes_root}` 在 `/init` 中设定（默认：`./notes/`）。下文所有路径使用此变量。
 
----
+***
 
 ## 命令参考
 
 | 命令 | 功能 |
 |------|------|
+| `/help` | 显示快速入门指南 |
 | `/init` | 设置向导 — 选择语言、确定根路径、导入或从头开始 |
 | `/newnotebook [名称]` | 在 `{notes_root}` 下创建笔记本 |
 | `/newsection [笔记本] [分区]` | 在笔记本内创建分区 |
 | `/newpage` | 创建页面 — 选择模板或空白、指定位置、生成内容 |
-| 归档 | 将旧笔记本移入 `_archive/` |
 | `/archive` | 归档笔记本、分区或单个页面 |
 
----
+***
+
+## `/help` — 快速入门指南
+
+用户输入 `/help` 时，用其选择的语言回复简要指南（默认中文）：
+
+```
+📓 onenote2md — 你的 Markdown 笔记本
+
+命令：
+  /init           首次设置（导入 OneNote 或从头开始）
+  /newnotebook    创建笔记本
+  /newsection     在笔记本中创建分区
+  /newpage        写笔记（选择模板 — 日记、会议、快速笔记或空白）
+  /archive        清理旧的笔记本、分区或页面
+
+新用户？
+  输入 /init 导入 OneNote 或创建第一个笔记本。
+  然后 /newnotebook → /newsection → /newpage 开始写笔记。
+
+模板？
+  /newpage 始终提供模板选择。插件自带日记、会议、快速笔记三种。
+  在 notes/.templates/ 下添加你自己的模板 — 会自动出现在选项中。
+
+OneNote？
+  /init 处理完整导入。需要 Windows + OneNote 桌面版。
+
+有问题随时问 — 不需要记住所有命令。
+```
+
+***
 
 ## `/init` — 设置向导
 
@@ -44,6 +73,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 问题: "Select your language / 选择语言："
 选项: "中文" | "English"
 ```
+
 选定语言后，本次会话所有提示、确认、生成内容均使用该语言。
 
 ### Step 1 — 根路径
@@ -51,6 +81,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 扫描当前目录中是否有 `notes/`、`notebooks/`、`docs/` 等目录。
 
 **找到了：**
+
 ```
 问题: "发现已有目录 '{path}/'。用作笔记目录？"
 选项:
@@ -59,6 +90,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 ```
 
 **没找到：**
+
 ```
 问题: "笔记目录创建在哪里？"
 选项:
@@ -80,16 +112,19 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 #### 导入路径
 
 如果 `{notes_root}/` 已有笔记本（`_archive/` 除外），警告：
+
 ```
 问题: "⚠️ {notes_root}/ 中已有笔记。导入会覆盖现有内容。继续？"
 选项: "覆盖并导入" | "取消"
 ```
+
 取消则停止。否则以 `{notes_root}` 为目标运行[导入流程](#导入流程)。导入完成后建议自动生成模板。
 
 #### 从头开始
 
 1. 询问："第一个笔记本叫什么名字？"
 2. 创建：
+
    ```
    {notes_root}/
    ├── {Notebook}/
@@ -105,7 +140,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 
 确保 `config.yaml` → `paths.notes_dir` = `{notes_root}`。
 
----
+***
 
 ## `/newnotebook` — 创建笔记本
 
@@ -116,7 +151,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 | 3 | 创建 `{notes_root}/{Name}/` |
 | 4 | 确认："笔记本「{Name}」已创建。用 `/newsection` 添加分区。" |
 
----
+***
 
 ## `/newsection` — 创建分区
 
@@ -126,7 +161,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 | 2 | 创建 `{notes_root}/{Notebook}/{Section}/` |
 | 3 | 确认："分区「{Section}」已在「{Notebook}」中创建。" |
 
----
+***
 
 ## `/newpage` — 创建页面
 
@@ -135,6 +170,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 ### Step 1 — 发现模板
 
 按优先级扫描：
+
 1. `{notes_root}/.templates/*.md`（用户模板 — 最高优先级）
 2. `<skill_dir>/templates/*.md`（插件默认 — 兜底）
 
@@ -164,6 +200,7 @@ note: 本文是 plugins/onenote2md/skills/onenote2md/SKILL.md 的中文同步翻
 | 模板无 frontmatter | 生成默认的 |
 
 默认 frontmatter：
+
 ```yaml
 ---
 date: YYYY-MM-DD
@@ -190,7 +227,7 @@ tags: []
 已创建：{notes_root}/{Notebook}/{Section}/{filename}.md
 ```
 
----
+***
 
 ## `/archive` — 归档笔记本、分区或页面
 
@@ -243,11 +280,11 @@ tags: []
 
 ### 规则
 
-- 常规操作绝不读取 `_archive/`
-- 仅在用户说"搜索归档"时搜索 `_archive/`
-- 归档的条目可随时移回原路径恢复
+* 常规操作绝不读取 `_archive/`
+* 仅在用户说"搜索归档"时搜索 `_archive/`
+* 归档的条目可随时移回原路径恢复
 
----
+***
 
 ## 模板系统
 
@@ -274,7 +311,7 @@ tags: []
 
 **更新：** 用户说"更新我的模板" → 重新分析全部笔记。
 
----
+***
 
 ## 导入流程
 
@@ -290,6 +327,7 @@ tags: []
 ```
 
 自动导出时：
+
 ```
 问题: "导出到哪个目录？"
 选项: "默认路径（./onenote_export）" | "自定义路径"
@@ -306,7 +344,7 @@ tags: []
 
 扫描所有 `.md` 文件，按 `type:` 聚类，提议生成模板到 `{notes_root}/.templates/`。
 
----
+***
 
 ## 文件命名
 
