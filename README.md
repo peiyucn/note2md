@@ -1,4 +1,6 @@
-# onenote2md �
+# onenote2md 📓
+
+[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/onenote2md)
 
 > OneNote-style Markdown notes, managed through slash commands.
 
@@ -54,5 +56,3 @@ Use `/init` to import your existing OneNote notebooks. The agent guides you thro
 ## License
 
 MIT
-
-> [中文版](README.zh-CN.md)

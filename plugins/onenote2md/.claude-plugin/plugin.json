@@ -1,7 +1,7 @@
 {
   "name": "onenote2md",
   "version": "0.1.0",
-  "description": "Agent-native Markdown note management in the OneNote style. Notebook→Section→Page hierarchy. Dynamic templates learned from your own notes. OneNote migration via /init. Context-safe archiving. Unified slash-command system (/init, /newnotebook, /newsection, /newpage).",
+  "description": "Agent-native Markdown note management in the OneNote style. Notebook→Section→Page hierarchy. Slash commands: /init, /newnotebook, /newpage, /newtemplate, /archive, /securecheck, and more. Smart templates learned from your own notes. OneNote migration. Context-safe archiving.",
   "skills": "./skills/",
   "author": {
     "name": "peiyucn"

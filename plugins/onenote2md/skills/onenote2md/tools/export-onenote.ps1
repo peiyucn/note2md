@@ -16,6 +16,7 @@ param(
 )
 
 $ErrorActionPreference = "Continue"
+$utf8NoBom = New-Object System.Text.UTF8Encoding($false)
 $onenote = New-Object -ComObject OneNote.Application
 $baseDir = $OutputDir
 
@@ -76,7 +77,7 @@ foreach ($notebook in $notebooks) {
                 $pageXml = ""
                 $onenote.GetPageContent($pageId, [ref]$pageXml, 0)
                 $prettyXml = '<?xml version="1.0" encoding="UTF-8"?>' + "`r`n" + $pageXml
-                [System.IO.File]::WriteAllText($pageFile, $prettyXml, [System.Text.Encoding]::UTF8)
+                [System.IO.File]::WriteAllText($pageFile, $prettyXml, $utf8NoBom)
                 Write-Host "    OK: $pageName" -ForegroundColor Green
                 $pageCount++
                 $totalPages++

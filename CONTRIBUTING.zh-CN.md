@@ -1,12 +1,14 @@
 # 参与贡献 onenote2md
 
+简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/onenote2md)
+
 ## 分支策略
 
-- `main` — 稳定，可发布。禁止直接提交。
+- `master` — 稳定，可发布。禁止直接提交。
 - `dev` — 活跃开发。所有工作从 `dev` 拉分支，合并回 `dev`。
 - 功能分支 — `feature/<名称>` 从 `dev` 拉出，通过 PR 合并。
 
-工作流：`dev` → 功能分支 → PR → `dev` →（就绪后）→ `main`。
+工作流：`dev` → 功能分支 → PR → `dev` →（就绪后）→ `master`。
 
 ## 核心原则
 
@@ -51,5 +53,3 @@ onenote2md/
 - 模板就是 Markdown，可带 frontmatter，支持 `{{VARIABLE}}` 占位符。
 - 如果模板以 `---` YAML frontmatter 开头，将原样使用（占位符会被填充）。
 - 如果没有，Agent 自动生成默认 frontmatter：`date`、`type`（取文件名）、`title`、`tags`。
-
-> [English](CONTRIBUTING.md)

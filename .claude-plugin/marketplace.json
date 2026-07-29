@@ -1,10 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "onenote2md",
-  "description": "Agent-native Markdown note management in the OneNote style. Slash-command system (/init, /newnotebook, /newsection, /newpage). Dynamic templates from your own notes. OneNote migration via /init. Works across Copilot, Claude Code, and Codex.",
+  "description": "Agent-native Markdown note management in the OneNote style. Slash commands: /init, /newnotebook, /newpage, /newtemplate, /archive, /securecheck, and more. Smart templates learned from your own notes. OneNote migration. Works across Copilot, Claude Code, and Codex.",
   "owner": {
     "name": "peiyucn"
   },
+  "homepage": "https://github.com/peiyucn/onenote2md",
+  "repository": "https://github.com/peiyucn/onenote2md",
   "plugins": [
     {
       "name": "onenote2md",

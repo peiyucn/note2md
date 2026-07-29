@@ -1,12 +1,14 @@
 # Contributing to onenote2md
 
+[简体中文](CONTRIBUTING.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/onenote2md)
+
 ## Branch Strategy
 
-- `main` — stable, release-ready. Never commit directly.
+- `master` — stable, release-ready. Never commit directly.
 - `dev` — active development. All work branches from and merges into `dev`.
 - Feature branches — `feature/<name>` off `dev`, merged back via PR.
 
-Workflow: `dev` → feature branch → PR → `dev` → (when ready) → `main`.
+Workflow: `dev` → feature branch → PR → `dev` → (when ready) → `master`.
 
 ## Project Structure
 
@@ -49,5 +51,3 @@ Drop a `.md` file into `plugins/onenote2md/skills/onenote2md/templates/`.
 - Templates are just Markdown with optional frontmatter and `{{VARIABLE}}` placeholders.
 - If the template starts with `---` YAML frontmatter, it will be used as-is (with placeholders filled).
 - If not, the agent auto-generates frontmatter with `date`, `type` (from the filename), `title`, and `tags`.
-
-> [中文版](CONTRIBUTING.zh-CN.md)

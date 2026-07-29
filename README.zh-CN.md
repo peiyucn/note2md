@@ -1,5 +1,7 @@
 # onenote2md 📓
 
+简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/onenote2md)
+
 > OneNote 风格的 Markdown 笔记，通过斜杠命令管理。
 
 ## 为什么用这个
@@ -54,5 +56,3 @@
 ## License
 
 MIT
-
-> [English](README.md)

@@ -76,17 +76,15 @@ def _detect_heading_level(elem: ET.Element) -> int:
     return 0
 
 
-def _extract_images(elem: ET.Element, xml_dir: Path) -> list[str]:
-    """Extract image references from the page XML."""
-    images = []
-    for img in elem.iter(f"{{{ONENOTE_SSL}}}Image") if False else []:
-        pass  # Image extraction from XML is complex — placeholder for future
-    return images
+def _extract_images(elem: ET.Element) -> list[str]:
+    """Extract image references from the page XML. (Placeholder — not yet implemented.)"""
+    # Image extraction from OneNote XML is complex — pending implementation
+    return []
 
 
 # ---------- core conversion ----------
 
-def _convert_oe_tree(element: ET.Element, depth: int = 0) -> str:
+def _convert_oe_tree(element: ET.Element, depth: int = 0) -> list[str]:
     """
     Recursively convert an <one:OE> tree (OneNote paragraph) to Markdown.
     Returns a list of markdown lines.
@@ -94,7 +92,7 @@ def _convert_oe_tree(element: ET.Element, depth: int = 0) -> str:
     lines = []
 
     # Skip empty / structural elements
-    if element.tag == f"{{{ONENOTE_SSL}}}Image":
+    if element.tag == f"{{{ONENOTE_NS}}}Image":
         return []
 
     # Collect children that are meaningful
@@ -261,7 +259,7 @@ def _detect_type(page_name: str, content: str) -> str:
     lower = content.lower()
     if any(kw in page_name.lower() for kw in ["例会", "会议", "meeting", "review"]):
         return "meeting"
-    if any(kw in page_name.lower() for kw in ["日记", "daily", "journal", "日记"]):
+    if any(kw in page_name.lower() for kw in ["日记", "daily", "journal"]):
         return "daily"
     if any(kw in lower for kw in ["待办", "todo", "action item"]):
         return "task"
