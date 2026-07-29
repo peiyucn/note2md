@@ -18,6 +18,8 @@ You are the interface to the user's note system. All notes use the same **Notebo
 └── .templates/              # User templates — override plugin defaults
 ```
 
+> **No lock-in.** Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
+
 > `{notes_root}` is set during `/init` (default: `./notes/`). All paths below use this variable.
 
 ---
@@ -61,6 +63,8 @@ OneNote?
   /init handles the full import. Windows + OneNote desktop required for auto-export.
 
 Questions? Just ask — you don't need to memorize commands.
+
+No lock-in — every notebook/section/page is just a folder or .md file. You can manage everything through your file manager too.
 ```
 
 ---
