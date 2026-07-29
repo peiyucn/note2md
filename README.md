@@ -137,7 +137,6 @@ onenote2md/
 │       ├── SKILL.md             ← Agent 行为指南（含命令定义）
 │       ├── templates/           ← 默认模板
 │       └── tools/               ← OneNote 迁移脚本
-├── config.yaml
 ├── SKILL-CN.md                  ← 中文参考（作者对照用，不被 Agent 加载）
 └── README.md
 ```

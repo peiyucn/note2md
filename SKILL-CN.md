@@ -147,9 +147,9 @@ OneNote？
 4. 创建 `{notes_root}/{Notebook}/{Section}/`
 5. 确认："就绪！「{Notebook}」和「Quick Notes」已创建。用 `/newpage` 写第一篇笔记。"
 
-### Step 3 — 更新配置
+### Step 3 — 完成
 
-确保 `config.yaml` → `paths.notes_dir` = `{notes_root}`。
+设置完成。`{notes_root}` 将被用于所有后续操作。
 
 ***
 
@@ -230,7 +230,7 @@ tags: []
 
 ### Step 6 — 文件名
 
-按 `type` 匹配 `config.yaml` → `naming:` 规则（见[文件命名](#文件命名)）。已存在则追加 `(2)`。
+按 `type` 匹配下方命名规则（见[文件命名](#文件命名)）。已存在则追加 `(2)`。
 
 ### Step 7 — 确认
 
@@ -413,7 +413,7 @@ tags: []
 
 ## 文件命名
 
-由 `config.yaml` → `naming:` 定义。默认规则：
+默认命名规则：
 
 | type | 命名规则 | 示例 |
 |------|----------|------|

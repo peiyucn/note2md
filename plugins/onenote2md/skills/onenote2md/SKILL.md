@@ -143,9 +143,9 @@ If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) target
 4. Create `{notes_root}/{Notebook}/{Section}/`
 5. Confirm: "All set! '{Notebook}' and 'Quick Notes' created. Use `/newpage` to write your first note."
 
-### Step 3 — Update config
+### Step 3 — Done
 
-Ensure `config.yaml` → `paths.notes_dir` = `{notes_root}`.
+Setup complete. The resolved `{notes_root}` is used for all subsequent operations.
 
 ---
 
@@ -224,7 +224,7 @@ tags: []
 
 ### Step 6 — Filename
 
-Match `type` against `config.yaml` → `naming:` rules (see [File Naming](#file-naming)). Append `(2)` if exists.
+Match `type` against the naming rules below (see [File Naming](#file-naming)). Append `(2)` if exists.
 
 ### Step 7 — Confirm
 
@@ -406,7 +406,7 @@ Run `<skill_dir>/tools/convert-xml2md.py` → converts XML to `{notes_root}/` pr
 
 ## File Naming
 
-From `config.yaml` → `naming:`. Defaults:
+Default naming rules:
 
 | type | pattern | example |
 |------|---------|---------|
