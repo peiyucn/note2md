@@ -31,11 +31,11 @@
 所有命令在 VS Code Copilot 和 Claude Code 中完全一致：
 
 ```bash
-/init                    # 首次设置 — 选择语言，导入 OneNote 或从头开始
-/newnotebook Work        # 创建笔记本
-/newsection Work 周报     # 创建分区
-/newpage                 # 创建笔记 — 选择模板（日记/会议/快速笔记/空白）
-/archive                 # 归档 — 笔记本、分区或单个页面
+/init                       # First-time setup — pick language, import or start fresh
+/newnotebook Work           # Create a notebook
+/newsection Work Weekly     # Create a section
+/newpage                    # Create a page — pick a template (daily/meeting/quick-note/blank)
+/archive                    # Archive — notebooks, sections, or pages
 ```
 
 | 命令 | 用途 | 示例 |
@@ -43,7 +43,7 @@
 | `/help` | 显示快速入门指南 | `/help` |
 | `/init` | 初始化（导入或新建） | `/init` |
 | `/newnotebook` | 创建笔记本 | `/newnotebook Work` |
-| `/newsection` | 在笔记本中创建分区 | `/newsection Work 周报` |
+| `/newsection` | 在笔记本中创建分区 | `/newsection Work Weekly` |
 | `/newpage` | 创建笔记页（模板优先，可选空白） | `/newpage` |
 | `/archive` | 归档笔记本、分区或页面 | `/archive` |
 
@@ -52,25 +52,27 @@
 ## 笔记模型（OneNote 风格）
 
 ```
-notes/                        ← 你的笔记本根目录
-├── {笔记本}/                  ← 笔记本
-│   ├── {分区}/                ← 分区
-│   │   └── {页面}.md          ← 笔记
-├── _archive/                 ← 归档区（Agent 默认不看）
-└── .templates/               ← 你的模板（Agent 自动学习生成）
+notes/                        ← Your notes root directory
+├── {Notebook}/               ← Notebook (folder)
+│   ├── {Section}/            ← Section (subfolder)
+│   │   ├── {page}.md         ← Page (Markdown file)
+│   │   └── ...
+│   └── ...
+├── _archive/                 ← Archive (Agent ignores by default)
+└── .templates/               ← Your templates (auto-discovered by /newpage)
 ```
 
-> 💡 **无锁定。** 每个笔记本就是文件夹，每个页面就是 `.md` 文件。不用命令，用文件管理器也能创建、改名、移动、删除。Agent 会自动感知变化。
+> 💡 **No lock-in.** Every notebook is a folder, every page is a `.md` file. Create, rename, move, or delete through your file manager — the agent picks up changes automatically.
 
 ## 模板
 
 插件自带 3 个通用默认模板，`/newpage` 默认从模板创建，也可选空白页：
 
-| 模板 | 适用场景 |
-|------|----------|
-| 📅 日记 | 日记 / 日志 |
-| 🤝 会议记录 | 会议记录 |
-| 💡 快速笔记 | 快速捕获 |
+| 模板 | 文件 | 适用场景 |
+|------|------|----------|
+| 📅 Daily Journal | `daily.md` | 日记 / 日志 |
+| 🤝 Meeting Notes | `meeting.md` | 会议记录 |
+| 💡 Quick Note | `quick-note.md` | 快速捕获 |
 
 ### 用户模板（覆盖默认）
 
@@ -78,9 +80,8 @@ notes/                        ← 你的笔记本根目录
 
 | 方式 | 说明 |
 |------|------|
-| 🔍 导入后自动生成 | 从 OneNote 导入后，Agent 分析你的笔记结构，自动提炼模板 |
+| `/newtemplate` | 选一个分区，Agent 分析其中同类笔记的结构，自动提炼模板 |
 | ✍️ 手动添加 | 往 `notes/.templates/` 丢 `.md` 文件即可，Agent 自动发现 |
-| 📊 持续学习 | 笔记多了说"更新我的模板"，重新分析全部笔记 |
 
 ## OneNote 导入
 
@@ -91,10 +92,10 @@ notes/                        ← 你的笔记本根目录
 运行 `export-onenote.ps1`，通过 OneNote COM API 将笔记本导出为 XML 文件。
 
 ```
-onenote_export/               ← 临时目录，转换完可删除
-├── {笔记本}/
-│   ├── {分区}/
-│   │   ├── {页面}.xml
+onenote_export/               ← Temporary directory — delete after conversion
+├── {Notebook}/
+│   ├── {Section}/
+│   │   ├── {page}.xml
 │   │   └── ...
 ```
 
@@ -107,10 +108,10 @@ onenote_export/               ← 临时目录，转换完可删除
 运行 `convert-xml2md.py`，将 XML 转为 Markdown，按原样搬进 `notes/`：
 
 ```
-onenote_export/    →    notes/
-  Work/                       Work/
-    IT周例会/                    IT周例会/
-      2026-7-23.xml              2026-7-23.md
+onenote_export/          →    notes/
+  Diary/                           Diary/
+    Daily/                           Daily/
+      2026-07-29.xml                  2026-07-29.md
 ```
 
 > 导入是 **1:1 映射**，不会跳过或修改任何用户分区。
@@ -119,14 +120,14 @@ onenote_export/    →    notes/
 
 | 特性 | 说明 |
 |------|------|
-| ⌨️ 统一命令 | `/init` `/newnotebook` `/newsection` `/newpage`，跨 Agent 一致 |
+| ⌨️ 统一命令 | `/help` `/init` `/newnotebook` `/newsection` `/newpage` `/newtemplate` `/securecheck` `/archive` |
 | 🧠 Agent-Native | 没有 GUI，Agent 就是界面 |
 | 📦 零依赖 | 纯 Markdown 文件，任何编辑器都能打开 |
 | 🗂️ Notebook→Section→Page | 三层结构，和 OneNote 一模一样 |
-| 🧩 动态模板 | 模板从你的笔记习惯中自动学习，不预设 |
+| 🧩 动态模板 | 3 个默认模板 + `/newtemplate` 从分区提炼自定义模板 |
 | 📥 归档机制 | 旧笔记本移到 `_archive/`，Agent 不自动加载 |
 | 🔌 跨平台 | GitHub Copilot、Claude Code、Codex 都能用 |
-| 🏗️ 可定制 | 加模板、改配置，甚至直接用文件夹操作 |
+| 🏗️ 无锁定 | 文件夹和 .md 文件，文件管理器也能操作 |
 
 ## 项目结构
 

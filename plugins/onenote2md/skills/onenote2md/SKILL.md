@@ -293,21 +293,18 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ## `/securecheck` — Security Check
 
-Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Use `grep_search` or read files directly.
+Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Read files directly — you understand context, not just regex.
 
-### Patterns to Detect
+### What to Look For
 
-| Category | Pattern / Keyword |
-|----------|-------------------|
-| Passwords | `password`, `passwd`, `pwd`, `password`, `secret`, `密码` near `=` or `:` |
-| National ID | 18-digit Chinese ID pattern: `/\d{6}(19|20)\d{2}(0[1-9]|1[0-2])(0[1-9]|[12]\d|3[01])\d{3}[\dXx]/` |
-| SSN (US) | `/\d{3}-\d{2}-\d{4}/` |
-| Passport | `passport`, `护照`, patterns: `/E\d{7,8}/`, `/G\d{7,8}/` (Chinese), `/\d{9}/` (US) |
-| Driver's license | `driver`, `驾照`, `DL-`, `license` near alphanumeric patterns |
-| Bank cards | 16–19 digit sequences, `card`, `银行卡`, `credit` |
-| API keys / tokens | `api_key`, `token`, `secret`, `sk-`, `ghp_`, `gho_`, `Bearer`, `Authorization` |
-| Phone numbers | Chinese mobile `1[3-9]\d{9}`, international `\+\d{7,15}` |
-| Email | `[...]@[...]` — flag if found in unexpected contexts |
+Read each page and flag anything that looks like:
+- Passwords or credentials (`password`, `pwd`, `密码` near `=` or `:`)
+- Government IDs (Chinese 18-digit ID, US SSN, passport numbers, driver's license)
+- Financial data (bank card numbers, `credit`, `银行卡`)
+- API keys and tokens (`sk-...`, `ghp_...`, `Bearer ...`, `Authorization:` headers)
+- Personal contact (phone numbers, email addresses in unexpected places)
+
+Use your judgment — if it walks like a secret, flag it.
 
 ### Procedure
 
