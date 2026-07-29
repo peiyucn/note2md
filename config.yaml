@@ -1,0 +1,42 @@
+# ============================================================
+# onenote2md 配置文件
+# OneNote 风格: Notebook → Section → Page
+# ============================================================
+
+# ---- 归档规则 ----
+archive:
+  auto_suggest: true
+  inactive_months: 3
+
+# ---- 页面命名（新建笔记时的文件名规则）----
+naming:
+  daily:     "{date}.md"
+  meeting:   "{date}-{topic}.md"
+  reading:   "{title}.md"
+  project:   "{project}.md"
+  quick:     "{date}-{title}.md"
+  default:   "{title}.md"
+
+# ---- XML → MD 转换 ----
+convert:
+  extract_images: true
+  assets_dir: "./notes/assets"
+  add_frontmatter: true
+
+# ---- 路径 ----
+paths:
+  notes_dir: "./notes"
+  templates_dir: "./notes/.templates"
+
+# ---- 导入引导 ----
+onboarding:
+  # 用户首次导入 OneNote 后的自动分析
+  auto_analyze: true
+  # 分析后自动生成模板（需要用户确认）
+  auto_suggest_templates: true
+  # 模板最少样本数：某种类型笔记至少 N 篇才生成模板
+  min_samples_for_template: 3
+
+# ---- 上下文管理 ----
+context:
+  max_notebooks_before_suggest: 5

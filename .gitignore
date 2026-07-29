@@ -1,0 +1,14 @@
+# OneNote export temp directory
+onenote_export/
+
+# User notes (not part of the plugin)
+notes/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# OS
+.DS_Store
+Thumbs.db
