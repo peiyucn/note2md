@@ -1,9 +1,9 @@
 ---
-name: onenote2md
-description: Agent-native Markdown note management in the OneNote style. Slash commands: /help, /init, /newnotebook, /newsection, /newpage (template-first), /newtemplate, /securecheck, /archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
+name: note2md
+description: Agent-native Markdown note management in the OneNote style. Slash commands: /n2m:help, /n2m:init, /n2m:newnotebook, /n2m:newsection, /n2m:newpage (template-first), /n2m:newtemplate, /n2m:securecheck, /n2m:archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
 ---
 
-# onenote2md — Agent-Native Markdown Note Management
+# note2md — Agent-Native Markdown Note Management
 
 You are the interface to the user's note system. All notes use the same **Notebook → Section → Page** hierarchy as OneNote.
 
@@ -20,7 +20,7 @@ You are the interface to the user's note system. All notes use the same **Notebo
 
 > **No lock-in.** Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
 
-> `{notes_root}` is set during `/init` (default: `./notes/`). All paths below use this variable.
+> `{notes_root}` is set during `/n2m:init` (default: `./notes/`). All paths below use this variable.
 
 ---
 
@@ -28,46 +28,46 @@ You are the interface to the user's note system. All notes use the same **Notebo
 
 | Command | What it does |
 |---------|-------------|
-| `/help` | Show this quick-start guide |
-| `/init` | Setup wizard — pick language, choose root path, import or start fresh |
-| `/newnotebook [name]` | Create a notebook under `{notes_root}` |
-| `/newsection [notebook] [section]` | Create a section inside a notebook |
-| `/newpage` | Create a page — pick template or blank, ask destination, build it |
-| `/newtemplate` | Extract a template from a section of similar pages |
-| `/securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
-| `/archive` | Archive a notebook, section, or single page |
+| `/n2m:help` | Show this quick-start guide |
+| `/n2m:init` | Setup wizard — pick language, choose root path, import or start fresh |
+| `/n2m:newnotebook [name]` | Create a notebook under `{notes_root}` |
+| `/n2m:newsection [notebook] [section]` | Create a section inside a notebook |
+| `/n2m:newpage` | Create a page — pick template or blank, ask destination, build it |
+| `/n2m:newtemplate` | Extract a template from a section of similar pages |
+| `/n2m:securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
+| `/n2m:archive` | Archive a notebook, section, or single page |
 
 ---
 
-## `/help` — Quick-Start Guide
+## `/n2m:help` — Quick-Start Guide
 
-When the user types `/help`, reply with a concise guide in their chosen language (default English):
+When the user types `/n2m:help`, reply with a concise guide in their chosen language (default English):
 
 ```
-📓 onenote2md — Your Markdown Notebook
+📓 note2md — Your Markdown Notebook
 
 Commands:
-  /init           First-time setup (import OneNote or start fresh)
-  /newnotebook    Create a new notebook
-  /newsection     Create a section inside a notebook  
-  /newpage        Write a note (pick a template — diary, meeting, quick note, or blank)
-  /newtemplate    Extract a template from a section of similar notes
-  /archive        Clean up old notebooks, sections, or pages
+  /n2m:init           First-time setup (import OneNote or start fresh)
+  /n2m:newnotebook    Create a new notebook
+  /n2m:newsection     Create a section inside a notebook  
+  /n2m:newpage        Write a note (pick a template — diary, meeting, quick note, or blank)
+  /n2m:newtemplate    Extract a template from a section of similar notes
+  /n2m:archive        Clean up old notebooks, sections, or pages
 
 First time?
-  Type /init to import your OneNote or create your first notebook.
-  Then /newnotebook → /newsection → /newpage to start writing.
+  Type /n2m:init to import your OneNote or create your first notebook.
+  Then /n2m:newnotebook → /n2m:newsection → /n2m:newpage to start writing.
 
 Templates?
-  /newpage always offers templates. The plugin comes with diary, meeting, and quick-note.
+  /n2m:newpage always offers templates. The plugin comes with diary, meeting, and quick-note.
   Add your own under notes/.templates/ — they'll appear automatically.
-  /newtemplate extracts a template from any section with similar pages.
+  /n2m:newtemplate extracts a template from any section with similar pages.
 
 OneNote?
-  /init handles the full import. Windows + OneNote desktop required for auto-export.
+  /n2m:init handles the full import. Windows + OneNote desktop required for auto-export.
 
 Security?
-  /securecheck checks your notes for passwords, ID numbers, bank cards, and API tokens.
+  /n2m:securecheck checks your notes for passwords, ID numbers, bank cards, and API tokens.
 
 Questions? Just ask — you don't need to memorize commands.
 
@@ -76,7 +76,7 @@ No lock-in — every notebook/section/page is just a folder or .md file. You can
 
 ---
 
-## `/init` — Setup Wizard
+## `/n2m:init` — Setup Wizard
 
 Multi-step guided flow. Use the platform's native question UI (`askQuestions`) at each decision point.
 
@@ -126,7 +126,7 @@ If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
 Question: "⚠️ {notes_root}/ already has notes. Import will OVERWRITE them. Continue?"
 Options: "Overwrite and import" | "Cancel"
 ```
-If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `/newtemplate` on any section with similar pages to create templates."
+If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `/n2m:newtemplate` on any section with similar pages to create templates."
 
 #### Fresh Start Path
 
@@ -141,7 +141,7 @@ If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) target
    ```
 3. Ask: "First section name in {Notebook}?"
 4. Create `{notes_root}/{Notebook}/{Section}/`
-5. Confirm: "All set! '{Notebook}' and 'Quick Notes' created. Use `/newpage` to write your first note."
+5. Confirm: "All set! '{Notebook}' and 'Quick Notes' created. Use `/n2m:newpage` to write your first note."
 
 ### Step 3 — Done
 
@@ -149,18 +149,18 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 
 ---
 
-## `/newnotebook` — Create Notebook
+## `/n2m:newnotebook` — Create Notebook
 
 | Step | Action |
 |------|--------|
-| 1 | Get name — from argument (`/newnotebook Work`) or ask user |
+| 1 | Get name — from argument (`/n2m:newnotebook Work`) or ask user |
 | 2 | If `{notes_root}/{Name}/` exists → warn, ask for a different name |
 | 3 | Create `{notes_root}/{Name}/` |
-| 4 | Confirm: "Notebook '{Name}' created. Use `/newsection` to add sections." |
+| 4 | Confirm: "Notebook '{Name}' created. Use `/n2m:newsection` to add sections." |
 
 ---
 
-## `/newsection` — Create Section
+## `/n2m:newsection` — Create Section
 
 | Step | Action |
 |------|--------|
@@ -170,7 +170,7 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 
 ---
 
-## `/newpage` — Create Page
+## `/n2m:newpage` — Create Page
 
 Template-first; "blank page" always available as the last option.
 
@@ -234,9 +234,9 @@ Created: {notes_root}/{Notebook}/{Section}/{filename}.md
 
 ---
 
-## `/archive` — Archive Notebooks, Sections, or Pages
+## `/n2m:archive` — Archive Notebooks, Sections, or Pages
 
-Triggered by `/archive` command, or when agent notices 5+ notebooks.
+Triggered by `/n2m:archive` command, or when agent notices 5+ notebooks.
 
 ### Step 1 — Scope
 
@@ -291,7 +291,7 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ---
 
-## `/securecheck` — Security Check
+## `/n2m:securecheck` — Security Check
 
 Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Read files directly — you understand context, not just regex.
 
@@ -316,7 +316,7 @@ Use your judgment — if it walks like a secret, flag it.
    - Example: `⚠️ notes/Work/项目/密码本.md:12 — Possible password`
 4. **Never output the actual sensitive value.** Use `[REDACTED]` if context is needed.
 5. Summary: "Found N potential issues across M files."
-6. Remind: "You can move sensitive files to _archive/ or delete them. Use /archive to clean up."
+6. Remind: "You can move sensitive files to _archive/ or delete them. Use /n2m:archive to clean up."
 
 ### Scope Options
 
@@ -350,7 +350,7 @@ Options:
 
 ### Creating User Templates
 
-**`/newtemplate` — Extract template from a section:**
+**`/n2m:newtemplate` — Extract template from a section:**
 
 1. Ask: which notebook → which section to analyze.
 2. Give the user a chance to describe their needs before extracting:
@@ -367,9 +367,9 @@ Options:
    - Body text that varies → replace with representative {{PLACEHOLDER}}
 5. Show the extracted template and report: "Found N pages with similar structure in '{Section}'."
 6. Ask: "Save this template? Give it a name."
-7. Write to `{notes_root}/.templates/{name}.md`. From now on, `/newpage` will include it.
+7. Write to `{notes_root}/.templates/{name}.md`. From now on, `/n2m:newpage` will include it.
 
-**Manual:** Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `/newpage`.
+**Manual:** Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `/n2m:newpage`.
 
 ---
 

@@ -1,13 +1,13 @@
 {
-  "name": "onenote2md",
+  "name": "note2md",
   "version": "0.1.0",
-  "description": "Agent-native Markdown note management in the OneNote style. Notebook→Section→Page hierarchy. Slash commands: /init, /newnotebook, /newpage, /newtemplate, /archive, /securecheck, and more. Smart templates learned from your own notes. OneNote migration. Context-safe archiving.",
+  "description": "Agent-native Markdown note management in the OneNote style. Notebook→Section→Page hierarchy. Slash commands: /n2m:init, /n2m:newnotebook, /n2m:newpage, /n2m:newtemplate, /n2m:archive, /n2m:securecheck, and more. Smart templates learned from your own notes. OneNote migration. Context-safe archiving.",
   "skills": "./skills/",
   "author": {
     "name": "peiyucn"
   },
-  "homepage": "https://github.com/peiyucn/onenote2md",
-  "repository": "https://github.com/peiyucn/onenote2md",
+  "homepage": "https://github.com/peiyucn/note2md",
+  "repository": "https://github.com/peiyucn/note2md",
   "license": "MIT",
   "keywords": ["notes", "markdown", "onenote", "knowledge-management", "productivity"]
 }

@@ -1,6 +1,6 @@
-# 参与贡献 onenote2md
+# 参与贡献 note2md
 
-简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/onenote2md)
+简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/note2md)
 
 ## 分支策略
 
@@ -17,11 +17,11 @@
 ## 项目结构
 
 ```
-onenote2md/
+note2md/
 ├── .claude-plugin/marketplace.json       # Claude Code 市场注册
-├── plugins/onenote2md/
+├── plugins/note2md/
 │   ├── .claude-plugin/plugin.json        # 插件元信息
-│   └── skills/onenote2md/
+│   └── skills/note2md/
 │       ├── SKILL.md                      # Agent 行为 — 所有命令逻辑在此
 │       ├── templates/                    # 内置页面模板
 │       └── tools/
@@ -48,7 +48,7 @@ onenote2md/
 
 ## 添加模板
 
-往 `plugins/onenote2md/skills/onenote2md/templates/` 中放入 `.md` 文件。
+往 `plugins/note2md/skills/note2md/templates/` 中放入 `.md` 文件。
 
 - 模板就是 Markdown，可带 frontmatter，支持 `{{VARIABLE}}` 占位符。
 - 如果模板以 `---` YAML frontmatter 开头，将原样使用（占位符会被填充）。

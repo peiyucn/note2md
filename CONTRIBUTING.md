@@ -1,6 +1,6 @@
-# Contributing to onenote2md
+# Contributing to note2md
 
-[简体中文](CONTRIBUTING.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/onenote2md)
+[简体中文](CONTRIBUTING.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/note2md)
 
 ## Branch Strategy
 
@@ -13,11 +13,11 @@ Workflow: `dev` → feature branch → PR → `dev` → (when ready) → `master
 ## Project Structure
 
 ```
-onenote2md/
+note2md/
 ├── .claude-plugin/marketplace.json       # Claude Code marketplace registry
-├── plugins/onenote2md/
+├── plugins/note2md/
 │   ├── .claude-plugin/plugin.json        # Plugin metadata
-│   └── skills/onenote2md/
+│   └── skills/note2md/
 │       ├── SKILL.md                      # Agent behavior — all command logic lives here
 │       ├── templates/                    # Built-in page templates
 │       └── tools/
@@ -46,7 +46,7 @@ Edit `SKILL.md`:
 
 ## Adding a Template
 
-Drop a `.md` file into `plugins/onenote2md/skills/onenote2md/templates/`.
+Drop a `.md` file into `plugins/note2md/skills/note2md/templates/`.
 
 - Templates are just Markdown with optional frontmatter and `{{VARIABLE}}` placeholders.
 - If the template starts with `---` YAML frontmatter, it will be used as-is (with placeholders filled).

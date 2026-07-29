@@ -1,6 +1,6 @@
-# onenote2md 📓
+# note2md 📓
 
-[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/onenote2md)
+[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/note2md)
 
 > OneNote-style Markdown notes, managed through slash commands.
 
@@ -10,9 +10,9 @@ Your notes are just folders and `.md` files — open them in any editor. But an 
 
 ## Install
 
-**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/onenote2md`, then install `onenote2md`.
+**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/note2md`, then install `note2md`.
 
-**Claude Code** — `/marketplace add https://github.com/peiyucn/onenote2md` then `/plugin install onenote2md`.
+**Claude Code** — `/marketplace add https://github.com/peiyucn/note2md` then `/plugin install note2md`.
 
 ## Commands
 
@@ -20,16 +20,16 @@ All agents use the same commands:
 
 | Command | What it does |
 |---------|-------------|
-| `/help` | Quick-start guide |
-| `/init` | Setup — pick language, choose notes directory, import OneNote or start fresh |
-| `/newnotebook <name>` | Create a notebook |
-| `/newsection <notebook> <section>` | Create a section inside a notebook |
-| `/newpage` | Create a page — pick a template (daily, meeting, quick-note, or blank) |
-| `/newtemplate` | Extract a template from a section of similar pages |
-| `/securecheck` | Scan your notes for passwords, IDs, API keys, and other sensitive data |
-| `/archive` | Move old notebooks, sections, or pages to `_archive/` |
+| `/n2m:help` | Quick-start guide |
+| `/n2m:init` | Setup — pick language, choose notes directory, import OneNote or start fresh |
+| `/n2m:newnotebook <name>` | Create a notebook |
+| `/n2m:newsection <notebook> <section>` | Create a section inside a notebook |
+| `/n2m:newpage` | Create a page — pick a template (daily, meeting, quick-note, or blank) |
+| `/n2m:newtemplate` | Extract a template from a section of similar pages |
+| `/n2m:securecheck` | Scan your notes for passwords, IDs, API keys, and other sensitive data |
+| `/n2m:archive` | Move old notebooks, sections, or pages to `_archive/` |
 
-First time? Type `/help` in any chat for a quick tour.
+First time? Type `/n2m:help` in any chat for a quick tour.
 
 ### No lock-in
 
@@ -37,7 +37,7 @@ Notebook = folder. Section = subfolder. Page = `.md` file. You can create, renam
 
 ## Templates
 
-`/newpage` always offers templates. Three built-in defaults ship with the plugin:
+`/n2m:newpage` always offers templates. Three built-in defaults ship with the plugin:
 
 | Template | File |
 |----------|------|
@@ -45,13 +45,13 @@ Notebook = folder. Section = subfolder. Page = `.md` file. You can create, renam
 | Meeting Notes | `templates/meeting.md` |
 | Quick Note | `templates/quick-note.md` |
 
-Add your own templates to `notes/.templates/` — they automatically appear in `/newpage` and override the built-in ones with the same filename.
+Add your own templates to `notes/.templates/` — they automatically appear in `/n2m:newpage` and override the built-in ones with the same filename.
 
-Use `/newtemplate` to extract a template from any section with similar pages — pick a section, optionally describe what you want, and the agent builds a template skeleton from the common patterns it finds.
+Use `/n2m:newtemplate` to extract a template from any section with similar pages — pick a section, optionally describe what you want, and the agent builds a template skeleton from the common patterns it finds.
 
 ## OneNote Import
 
-Use `/init` to import your existing OneNote notebooks. The agent guides you through export (Windows + OneNote desktop required) and markdown conversion. Result: `notes/` mirrors your original Notebook → Section → Page structure exactly. No content is filtered.
+Use `/n2m:init` to import your existing OneNote notebooks. The agent guides you through export (Windows + OneNote desktop required) and markdown conversion. Result: `notes/` mirrors your original Notebook → Section → Page structure exactly. No content is filtered.
 
 ## License
 

@@ -1,5 +1,5 @@
 """
-onenote2md — OneNote XML to Markdown Converter
+note2md — OneNote XML to Markdown Converter
 
 Converts OneNote pages exported as XML (via export-onenote.ps1) into
 structured Markdown files under notes/, preserving the Notebook → Section → Page hierarchy.
