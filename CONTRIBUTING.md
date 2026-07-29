@@ -1,5 +1,13 @@
 # Contributing to onenote2md
 
+## Branch Strategy
+
+- `main` — stable, release-ready. Never commit directly.
+- `dev` — active development. All work branches from and merges into `dev`.
+- Feature branches — `feature/<name>` off `dev`, merged back via PR.
+
+Workflow: `dev` → feature branch → PR → `dev` → (when ready) → `main`.
+
 ## Project Structure
 
 ```
