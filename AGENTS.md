@@ -4,6 +4,10 @@
 
 * **始终用简体中文回复**
 
+## 可用工具
+
+* `gh` CLI — 已登录 peiyucn，用于 GitHub 操作（repo edit、release 等），优先于浏览器
+
 ***
 
 ## Git 提交规范
