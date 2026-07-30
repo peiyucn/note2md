@@ -14,6 +14,8 @@ Your notes are just folders and `.md` files — open them in any editor. But an 
 
 **Claude Code** — `/marketplace add https://github.com/peiyucn/note2md` then `/plugin install note2md`.
 
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/note2md`.
+
 ## Commands
 
 All agents use the same commands:
@@ -24,7 +26,7 @@ All agents use the same commands:
 | `/n2m:init` | Setup — pick language, choose notes directory, import OneNote or start fresh |
 | `/n2m:newnotebook <name>` | Create a notebook |
 | `/n2m:newsection <notebook> <section>` | Create a section inside a notebook |
-| `/n2m:newpage` | Create a page — pick a template (daily, meeting, quick-note, or blank) |
+| `/n2m:newpage [template]` | Create a page — no arg = blank page; `daily`/`meeting`/`quick-note` = use template |
 | `/n2m:newtemplate` | Extract a template from a section of similar pages |
 | `/n2m:securecheck` | Scan your notes for passwords, IDs, API keys, and other sensitive data |
 | `/n2m:archive` | Move old notebooks, sections, or pages to `_archive/` |

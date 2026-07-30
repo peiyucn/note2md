@@ -14,6 +14,8 @@
 
 **Claude Code** — 先 `/marketplace add https://github.com/peiyucn/note2md`，再 `/plugin install note2md`。
 
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/note2md`。
+
 ## 命令
 
 所有 Agent 使用统一命令：
@@ -24,7 +26,7 @@
 | `/n2m:init` | 初始化 — 选择语言、确定笔记目录、导入 OneNote 或从头开始 |
 | `/n2m:newnotebook <名称>` | 创建笔记本 |
 | `/n2m:newsection <笔记本> <分区>` | 在笔记本中创建分区 |
-| `/n2m:newpage` | 创建页面 — 选择模板（日记、会议、快速笔记或空白） |
+| `/n2m:newpage [模板]` | 创建页面 — 无参数=空白页；`daily`/`meeting`/`quick-note`=使用模板 |
 | `/n2m:newtemplate` | 从分区中的同类页面提取模板 |
 | `/n2m:securecheck` | 检查笔记中的密码、身份证、API 密钥等敏感信息 |
 | `/n2m:archive` | 将旧的笔记本、分区或页面移入 `_archive/` |
