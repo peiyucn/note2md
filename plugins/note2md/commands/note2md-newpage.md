@@ -1,6 +1,6 @@
 ---
 name: newpage
-description: /note2md newpage — No arg = blank page; daily/meeting/quick-note = use template
+description: Create a page — no argument = blank page; daily/meeting/quick-note = use template
 argument-hint: [template]
 ---
 

@@ -1,6 +1,6 @@
 ﻿---
 name: note2md
-description: Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: /note2md help, /note2md init, /note2md newnotebook, /note2md newsection, /note2md newpage (template-first), /note2md newtemplate, /note2md securecheck, /note2md archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
+description: Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: help, init, newnotebook, newsection, newpage (template-first), newtemplate, securecheck, archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
 ---
 
 # note2md — Agent-Native Markdown Note Management
@@ -20,7 +20,7 @@ You are the interface to the user's note system. All notes use the same **Notebo
 
 > **No lock-in.** Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
 
-> `{notes_root}` is set during `/note2md init` (default: `./notes/`). All paths below use this variable.
+> `{notes_root}` is set during `init` (default: `./notes/`). All paths below use this variable.
 
 ---
 
@@ -28,20 +28,20 @@ You are the interface to the user's note system. All notes use the same **Notebo
 
 | Command | What it does |
 |---------|-------------|
-| `/note2md help` | Show this quick-start guide |
-| `/note2md init` | Setup wizard — pick language, choose root path, import or start fresh |
-| `/note2md newnotebook [name]` | Create a notebook under `{notes_root}` |
-| `/note2md newsection [notebook] [section]` | Create a section inside a notebook |
-| `/note2md newpage` | Create a page — pick template or blank, ask destination, build it |
-| `/note2md newtemplate` | Extract a template from a section of similar pages |
-| `/note2md securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
-| `/note2md archive` | Archive a notebook, section, or single page |
+| `help` | Show this quick-start guide |
+| `init` | Setup wizard — pick language, choose root path, import or start fresh |
+| `newnotebook [name]` | Create a notebook under `{notes_root}` |
+| `newsection [notebook] [section]` | Create a section inside a notebook |
+| `newpage` | Create a page — pick template or blank, ask destination, build it |
+| `newtemplate` | Extract a template from a section of similar pages |
+| `securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
+| `archive` | Archive a notebook, section, or single page |
 
 ---
 
 ## `help` — Quick-Start Guide
 
-When the user types `/note2md help`, reply with a concise guide in their chosen language (default English):
+When the user types `help`, reply with a concise guide in their chosen language (default English):
 
 ```
 📓 note2md — Your Markdown Notebook
@@ -55,8 +55,8 @@ Commands:
   archive        Clean up old notebooks, sections, or pages
 
 First time?
-  Type /note2md init to import your OneNote or create your first notebook.
-  Then /note2md newnotebook → newsection → newpage to start writing.
+  Type init to import your OneNote or create your first notebook.
+  Then newnotebook → newsection → newpage to start writing.
 
 Templates?
   newpage always offers templates. The plugin comes with diary, meeting, and quick-note.
@@ -117,7 +117,7 @@ If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
 Question: "⚠️ {notes_root}/ already has notes. Import will OVERWRITE them. Continue?"
 Options: "Overwrite and import" | "Cancel"
 ```
-If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `/note2md newtemplate` on any section with similar pages to create templates."
+If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `newtemplate` on any section with similar pages to create templates."
 
 #### Fresh Start Path
 
@@ -132,7 +132,7 @@ If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) target
    ```
 3. Ask: "First section name in {Notebook}?"
 4. Create `{notes_root}/{Notebook}/{Section}/`
-5. Confirm: "All set! '{Notebook}' and 'Quick Notes' created. Use `/note2md newpage` to write your first note."
+5. Confirm: "All set! '{Notebook}' and 'Quick Notes' created. Use `newpage` to write your first note."
 
 ### Step 3 — Done
 
@@ -144,10 +144,10 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 
 | Step | Action |
 |------|--------|
-| 1 | Get name — from argument (`/note2md newnotebook Work`) or ask user |
+| 1 | Get name — from argument (`newnotebook Work`) or ask user |
 | 2 | If `{notes_root}/{Name}/` exists → warn, ask for a different name |
 | 3 | Create `{notes_root}/{Name}/` |
-| 4 | Confirm: "Notebook '{Name}' created. Use `/note2md newsection` to add sections." |
+| 4 | Confirm: "Notebook '{Name}' created. Use `newsection` to add sections." |
 
 ---
 

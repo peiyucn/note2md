@@ -1,6 +1,6 @@
 ---
 name: help
-description: /note2md help — Show quick-start guide and command reference
+description: Show quick-start guide and command reference for note2md
 argument-hint: []
 ---
 
