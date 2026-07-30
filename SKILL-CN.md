@@ -1,4 +1,4 @@
----
+﻿---
 note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，仅供作者对照检查。不被任何 Agent 加载。修改 SKILL.md 时必须同步更新本文。
 ---
 # note2md — Agent 原生 Markdown 笔记管理
@@ -18,7 +18,7 @@ note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，
 
 > **无锁定。** 每个笔记本是一个文件夹，每个分区是一个子文件夹，每个页面是一个 `.md` 文件。你可以通过文件管理器直接创建、重命名、移动或删除任何内容 — Agent 会自动感知变化。命令只是可选的便利工具。
 
-> `{notes_root}` 在 `/n2m:init` 中设定（默认：`./notes/`）。下文所有路径使用此变量。
+> `{notes_root}` 在 `init` 中设定（默认：`./notes/`）。下文所有路径使用此变量。
 
 ***
 
@@ -26,46 +26,46 @@ note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，
 
 | 命令 | 功能 |
 |------|------|
-| `/n2m:help` | 显示快速入门指南 |
-| `/n2m:init` | 设置向导 — 选择语言、确定根路径、导入或从头开始 |
-| `/n2m:newnotebook [名称]` | 在 `{notes_root}` 下创建笔记本 |
-| `/n2m:newsection [笔记本] [分区]` | 在笔记本内创建分区 |
-| `/n2m:newpage` | 创建页面 — 选择模板或空白、指定位置、生成内容 |
-| `/n2m:newtemplate` | 从分区中的同类页面提取模板 |
-| `/n2m:securecheck` | 检查笔记中的敏感信息（密码、身份证、银行卡、API 令牌等） |
-| `/n2m:archive` | 归档笔记本、分区或单个页面 |
+| `help` | 显示快速入门指南 |
+| `init` | 设置向导 — 选择语言、确定根路径、导入或从头开始 |
+| `newnotebook [名称]` | 在 `{notes_root}` 下创建笔记本 |
+| `newsection [笔记本] [分区]` | 在笔记本内创建分区 |
+| `newpage` | 创建页面 — 选择模板或空白、指定位置、生成内容 |
+| `newtemplate` | 从分区中的同类页面提取模板 |
+| `securecheck` | 检查笔记中的敏感信息（密码、身份证、银行卡、API 令牌等） |
+| `archive` | 归档笔记本、分区或单个页面 |
 
 ***
 
-## `/n2m:help` — 快速入门指南
+## `help` — 快速入门指南
 
-用户输入 `/n2m:help` 时，用其选择的语言回复简要指南（默认中文）：
+用户输入 `help` 时，用其选择的语言回复简要指南（默认中文）：
 
 ```
 📓 note2md — 你的 Markdown 笔记本
 
 命令：
-  /n2m:init           首次设置（导入 OneNote 或从头开始）
-  /n2m:newnotebook    创建笔记本
-  /n2m:newsection     在笔记本中创建分区
-  /n2m:newpage        写笔记（选择模板 — 日记、会议、快速笔记或空白）
-  /n2m:newtemplate    从分区中的同类笔记提取模板
-  /n2m:archive        清理旧的笔记本、分区或页面
+  init           首次设置（导入 OneNote 或从头开始）
+  newnotebook    创建笔记本
+  newsection     在笔记本中创建分区
+  newpage        写笔记（选择模板 — 日记、会议、快速笔记或空白）
+  newtemplate    从分区中的同类笔记提取模板
+  archive        清理旧的笔记本、分区或页面
 
 新用户？
-  输入 /n2m:init 导入 OneNote 或创建第一个笔记本。
-  然后 /n2m:newnotebook → /n2m:newsection → /n2m:newpage 开始写笔记。
+  输入 init 导入 OneNote 或创建第一个笔记本。
+  然后 newnotebook → newsection → newpage 开始写笔记。
 
 模板？
-  /n2m:newpage 始终提供模板选择。插件自带日记、会议、快速笔记三种。
+  newpage 始终提供模板选择。插件自带日记、会议、快速笔记三种。
   在 notes/.templates/ 下添加你自己的模板 — 会自动出现在选项中。
-  /n2m:newtemplate 可从分区中的同类笔记中提取模板。
+  newtemplate 可从分区中的同类笔记中提取模板。
 
 OneNote？
-  /n2m:init 处理完整导入。需要 Windows + OneNote 桌面版。
+  init 处理完整导入。需要 Windows + OneNote 桌面版。
 
 安全？
-  /n2m:securecheck 检查笔记中的密码、身份证号、银行卡号和 API 令牌。
+  securecheck 检查笔记中的密码、身份证号、银行卡号和 API 令牌。
 
 有问题随时问 — 不需要记住所有命令。
 
@@ -74,7 +74,7 @@ OneNote？
 
 ***
 
-## `/n2m:init` — 设置向导
+## `init` — 设置向导
 
 多步骤引导流程。每个决策点使用平台原生提问界面（`askQuestions`）。
 
@@ -118,7 +118,7 @@ OneNote？
 选项: "覆盖并导入" | "取消"
 ```
 
-取消则停止。否则以 `{notes_root}` 为目标运行[导入流程](#导入流程)。导入完成后告知用户："导入完成。对任意包含同类笔记的分区使用 `/n2m:newtemplate` 即可创建模板。"
+取消则停止。否则以 `{notes_root}` 为目标运行[导入流程](#导入流程)。导入完成后告知用户："导入完成。对任意包含同类笔记的分区使用 `newtemplate` 即可创建模板。"
 
 #### 从头开始
 
@@ -134,7 +134,7 @@ OneNote？
    ```
 3. 询问："在 {Notebook} 中创建什么分区？"
 4. 创建 `{notes_root}/{Notebook}/{Section}/`
-5. 确认："就绪！「{Notebook}」和「Quick Notes」已创建。用 `/n2m:newpage` 写第一篇笔记。"
+5. 确认："就绪！「{Notebook}」和「Quick Notes」已创建。用 `newpage` 写第一篇笔记。"
 
 ### Step 3 — 完成
 
@@ -142,18 +142,18 @@ OneNote？
 
 ***
 
-## `/n2m:newnotebook` — 创建笔记本
+## `newnotebook` — 创建笔记本
 
 | 步骤 | 操作 |
 |------|------|
-| 1 | 获取名称 — 从参数（`/n2m:newnotebook Work`）或询问用户 |
+| 1 | 获取名称 — 从参数（`newnotebook Work`）或询问用户 |
 | 2 | 若 `{notes_root}/{Name}/` 已存在 → 警告，换一个名字 |
 | 3 | 创建 `{notes_root}/{Name}/` |
-| 4 | 确认："笔记本「{Name}」已创建。用 `/n2m:newsection` 添加分区。" |
+| 4 | 确认："笔记本「{Name}」已创建。用 `newsection` 添加分区。" |
 
 ***
 
-## `/n2m:newsection` — 创建分区
+## `newsection` — 创建分区
 
 | 步骤 | 操作 |
 |------|------|
@@ -163,13 +163,13 @@ OneNote？
 
 ***
 
-## `/n2m:newpage` — 创建页面
+## `newpage` — 创建页面
 
 模板优先；"空白页"始终作为最后一个选项。
 
-**快速路径**：`/n2m:newpage` 无参数 → 跳过模板选择，直接以空白页开始。仅需选择目的地和标题。
+**快速路径**：`newpage` 无参数 → 跳过模板选择，直接以空白页开始。仅需选择目的地和标题。
 
-**带参数**：`/n2m:newpage daily` → 使用日记模板；`/n2m:newpage meeting` → 使用会议模板，以此类推。
+**带参数**：`newpage daily` → 使用日记模板；`newpage meeting` → 使用会议模板，以此类推。
 
 ### Step 1 — 发现模板
 
@@ -184,8 +184,8 @@ OneNote？
 
 | 情况 | 操作 |
 |------|------|
-| `/n2m:newpage`（无参数） | 跳到 Step 3 — 空白页 |
-| `/n2m:newpage {名称}`（有参数） | 精确匹配已发现的模板。找到 → 直接使用。未找到或模糊 → 显示选项： |
+| `newpage`（无参数） | 跳到 Step 3 — 空白页 |
+| `newpage {名称}`（有参数） | 精确匹配已发现的模板。找到 → 直接使用。未找到或模糊 → 显示选项： |
 
 ```
 问题: "选择哪个模板？"
@@ -238,9 +238,9 @@ tags: []
 
 ***
 
-## `/n2m:archive` — 归档笔记本、分区或页面
+## `archive` — 归档笔记本、分区或页面
 
-触发：`/n2m:archive` 命令，或 Agent 发现 5+ 个笔记本时主动提醒。
+触发：`archive` 命令，或 Agent 发现 5+ 个笔记本时主动提醒。
 
 ### 第一步 — 选择范围
 
@@ -295,7 +295,7 @@ tags: []
 
 ***
 
-## `/n2m:securecheck` — 安全检查
+## `securecheck` — 安全检查
 
 扫描 `{notes_root}/`（排除 `_archive/`）中的敏感信息。直接读取文件 — Agent 理解上下文，不仅仅是正则匹配。
 
@@ -328,7 +328,7 @@ tags: []
    - 示例：`⚠️ notes/Work/项目/密码本.md:12 — 可能包含密码`
 5. **禁止输出实际的敏感值。** 如需上下文，使用 `[已隐藏]` 替代。
 6. 摘要："在 M 个文件中发现 N 处潜在问题。"
-7. 提醒："可将敏感文件移入 _archive/ 或删除。使用 /n2m:archive 进行清理。"
+7. 提醒："可将敏感文件移入 _archive/ 或删除。使用 archive 进行清理。"
 
 ### 扫描范围选项
 
@@ -362,7 +362,7 @@ tags: []
 
 ### 创建用户模板
 
-**`/n2m:newtemplate` — 从分区中提取模板：**
+**`newtemplate` — 从分区中提取模板：**
 
 1. 询问：哪个笔记本 → 哪个分区需要分析。
 2. 提取前让用户表达需求：
@@ -379,9 +379,9 @@ tags: []
    - 变量化的正文 → 替换为代表性 {{占位符}}
 5. 展示提取的模板，并告知："在「{Section}」中发现 N 篇结构相似的笔记。"
 6. 询问："保存此模板？给它起个名字。"
-7. 写入 `{notes_root}/.templates/{名称}.md`。之后 `/n2m:newpage` 会自动包含该模板。
+7. 写入 `{notes_root}/.templates/{名称}.md`。之后 `newpage` 会自动包含该模板。
 
-**手动添加：** 往 `{notes_root}/.templates/` 丢 `.md` 文件。`/n2m:newpage` 自动发现。
+**手动添加：** 往 `{notes_root}/.templates/` 丢 `.md` 文件。`newpage` 自动发现。
 
 ***
 

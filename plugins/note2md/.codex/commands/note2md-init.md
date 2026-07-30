@@ -4,4 +4,4 @@ description: Setup wizard — pick language, choose root path, import OneNote or
 argument-hint: [root-path]
 ---
 
-Execute the `/n2m:init` flow from the note2md skill. Follow all steps in the skill definition for this command.
+Execute the init flow from the note2md skill.

@@ -29,14 +29,14 @@
 ```
 plugins/note2md/
 ├── .prompts/                    — 命令文件（Copilot Chat 专用，*.prompt.md）
-│   ├── n2m-help.prompt.md
-│   ├── n2m-init.prompt.md
-│   ├── n2m-newnotebook.prompt.md
-│   ├── n2m-newsection.prompt.md
-│   ├── n2m-newpage.prompt.md
-│   ├── n2m-newtemplate.prompt.md
-│   ├── n2m-securecheck.prompt.md
-│   └── n2m-archive.prompt.md
+│   ├── help.prompt.md
+│   ├── init.prompt.md
+│   ├── newnotebook.prompt.md
+│   ├── newsection.prompt.md
+│   ├── newpage.prompt.md
+│   ├── newtemplate.prompt.md
+│   ├── securecheck.prompt.md
+│   └── archive.prompt.md
 ├── commands/                    — 命令文件（Claude Code + Codex 共用）
 │   ├── note2md-help.md
 │   ├── note2md-init.md

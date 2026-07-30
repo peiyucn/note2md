@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "note2md",
-  "description": "Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: /n2m:init, /n2m:newnotebook, /n2m:newpage, /n2m:newtemplate, /n2m:archive, /n2m:securecheck, and more. Smart templates learned from your own notes. OneNote import support. Works across Copilot, Claude Code, and Codex.",
+  "description": "Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: init, newnotebook, newpage, newtemplate, archive, securecheck, and more — all under the note2md namespace. Smart templates learned from your own notes. OneNote import support. Works across Copilot, Claude Code, and Codex.",
   "owner": {
     "name": "peiyucn"
   },
