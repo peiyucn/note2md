@@ -1,11 +1,12 @@
-﻿---
+***
+
 name: note2md
 description: Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: help, init, newnotebook, newsection, newpage (template-first), newtemplate, securecheck, archive. Plugin ships with daily, meeting, and quick-note templates; user templates take priority. Use when the user wants to manage notes, create a notebook/section/page, import from OneNote, or archive old notes.
----
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 # note2md — Agent-Native Markdown Note Management
 
-You are the interface to the user's note system. All notes use the same **Notebook → Section → Page** hierarchy as OneNote.
+You are the interface to the user's note system. All notes use the same   Notebook → Section → Page   hierarchy as OneNote.
 
 ```
 {notes_root}/
@@ -18,11 +19,11 @@ You are the interface to the user's note system. All notes use the same **Notebo
 └── .templates/              # User templates — override plugin defaults
 ```
 
-> **No lock-in.** Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
+>   No lock-in.   Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
 
 > `{notes_root}` is set during `init` (default: `./notes/`). All paths below use this variable.
 
----
+***
 
 ## Command Reference
 
@@ -37,7 +38,7 @@ You are the interface to the user's note system. All notes use the same **Notebo
 | `securecheck` | Scan notes for sensitive info (passwords, IDs, bank cards, tokens) |
 | `archive` | Archive a notebook, section, or single page |
 
----
+***
 
 ## `help` — Quick-Start Guide
 
@@ -74,7 +75,7 @@ Questions? Just ask — you don't need to memorize commands.
 No lock-in — every notebook/section/page is just a folder or .md file. You can manage everything through your file manager too.
 ```
 
----
+***
 
 ## `init` — Setup Wizard
 
@@ -86,6 +87,7 @@ Multi-step guided flow. Use the platform's native question UI (`askQuestions`) a
 Question: "Select your language / 选择语言："
 Options: "中文" | "English"
 ```
+
 Use the chosen language for all subsequent prompts, confirmations, and generated content.
 
 ### Step 1 — Root Path
@@ -113,16 +115,19 @@ Options:
 #### Import Path
 
 If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
+
 ```
 Question: "⚠️ {notes_root}/ already has notes. Import will OVERWRITE them. Continue?"
 Options: "Overwrite and import" | "Cancel"
 ```
+
 If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `newtemplate` on any section with similar pages to create templates."
 
 #### Fresh Start Path
 
 1. Ask: "First notebook name?"
 2. Create:
+
    ```
    {notes_root}/
    ├── {Notebook}/
@@ -138,7 +143,7 @@ If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) target
 
 Setup complete. The resolved `{notes_root}` is used for all subsequent operations.
 
----
+***
 
 ## `newnotebook` — Create Notebook
 
@@ -149,7 +154,7 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 | 3 | Create `{notes_root}/{Name}/` |
 | 4 | Confirm: "Notebook '{Name}' created. Use `newsection` to add sections." |
 
----
+***
 
 ## `newsection` — Create Section
 
@@ -159,19 +164,28 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 | 2 | Create `{notes_root}/{Notebook}/{Section}/` |
 | 3 | Confirm: "Section '{Section}' created in '{Notebook}'." |
 
----
+***
 
 ## `newpage` — Create Page
 
 Template-first; "blank page" always available as the last option.
 
-**Fast path**: `newpage` with no argument → skip template selection, create a blank page directly. User only needs to pick destination and title.
 
-**With argument**: `newpage daily` → use daily template; `newpage meeting` → use meeting template, etc.
+
+Fast path
+
+: `newpage` with no argument → skip template selection, create a blank page directly. User only needs to pick destination and title.
+
+
+
+With argument
+
+: `newpage daily` → use daily template; `newpage meeting` → use meeting template, etc.
 
 ### Step 1 — Discover Templates
 
 Scan in priority order:
+
 1. `{notes_root}/.templates/*.md` (user templates — highest priority)
 2. `<skill_dir>/templates/*.md` (plugin defaults — fallback)
 
@@ -206,6 +220,7 @@ Ask: notebook → section → page title. Allow creating new notebook/section in
 | No frontmatter in template | Generate default |
 
 Default frontmatter:
+
 ```yaml
 ---
 date: YYYY-MM-DD
@@ -232,7 +247,7 @@ Match `type` against the naming rules below (see [File Naming](#file-naming)). A
 Created: {notes_root}/{Notebook}/{Section}/{filename}.md
 ```
 
----
+***
 
 ## `archive` — Archive Notebooks, Sections, or Pages
 
@@ -252,7 +267,7 @@ Options:
 
 | Scope | Action |
 |-------|--------|
-| Notebook | List all notebooks (*excluding `_archive/`*), ask which one |
+| Notebook | List all notebooks ((excluding `_archive/`(), ask which one        |
 | Section | List notebooks → ask which one → list its sections → ask which one |
 | Page | List notebooks → section → ask which page |
 
@@ -285,11 +300,11 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ### Rules
 
-- Never read `_archive/` during normal operations
-- Only search `_archive/` when user says "search archive"
-- Archived items can be restored by moving them back to their original path
+* Never read `_archive/` during normal operations
+* Only search `_archive/` when user says "search archive"
+* Archived items can be restored by moving them back to their original path
 
----
+***
 
 ## `securecheck` — Security Check
 
@@ -298,11 +313,12 @@ Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Read fi
 ### What to Look For
 
 Read each page and flag anything that looks like:
-- Passwords or credentials (`password`, `pwd`, `密码` near `=` or `:`)
-- Government IDs (Chinese 18-digit ID, US SSN, passport numbers, driver's license)
-- Financial data (bank card numbers, `credit`, `银行卡`)
-- API keys and tokens (`sk-...`, `ghp_...`, `Bearer ...`, `Authorization:` headers)
-- Personal contact (phone numbers, email addresses in unexpected places)
+
+* Passwords or credentials (`password`, `pwd`, `密码` near `=` or `:`)
+* Government IDs (Chinese 18-digit ID, US SSN, passport numbers, driver's license)
+* Financial data (bank card numbers, `credit`, `银行卡`)
+* API keys and tokens (`sk-...`, `ghp_...`, `Bearer ...`, `Authorization:` headers)
+* Personal contact (phone numbers, email addresses in unexpected places)
 
 Use your judgment — if it walks like a secret, flag it.
 
@@ -310,25 +326,29 @@ Use your judgment — if it walks like a secret, flag it.
 
 1. Announce: "Scanning your notes for sensitive information…"
 2. Ask if user wants to add custom checks:
+
    ```
    Question: "I'll check for passwords, IDs, bank cards, API keys, and personal contact info. Anything else to look for?"
    Options:
      - "No — just the defaults" (default)
      - "Let me add custom patterns" (free text input — e.g. "internal project codes like PRJ-XXXX", "company confidential headers")
    ```
+
    If custom patterns provided, add them to the scan list.
 3. Search across `{notes_root}/` (skip `_archive/` and `.templates/`)
 4. For each match:
-   - Report the file path and line number
-   - Show the matching category (NOT the actual sensitive value)
-   - Example: `⚠️ notes/Work/项目/密码本.md:12 — Possible password`
-5. **Never output the actual sensitive value.** Use `[REDACTED]` if context is needed.
+
+   * Report the file path and line number
+   * Show the matching category (NOT the actual sensitive value)
+   * Example: `⚠️ notes/Work/Projects/credentials.md:12 — Possible password`
+5.   Never output the actual sensitive value.   Use `[REDACTED]` if context is needed.
 6. Summary: "Found N potential issues across M files."
-7. Remind: "You can move sensitive files to _archive/ or delete them. Use archive to clean up."
+7. Remind: "You can move sensitive files to \_archive/ or delete them. Use archive to clean up."
 
 ### Scope Options
 
 If user wants targeted scan:
+
 ```
 Question: "Scan everything, or a specific area?"
 Options:
@@ -337,7 +357,7 @@ Options:
   - "A specific section"
 ```
 
----
+***
 
 ## Template System
 
@@ -358,10 +378,15 @@ Options:
 
 ### Creating User Templates
 
-**`newtemplate` — Extract template from a section:**
+
+
+`newtemplate` — Extract template from a section:
+
+
 
 1. Ask: which notebook → which section to analyze.
 2. Give the user a chance to describe their needs before extracting:
+
    ```
    Question: "I'll analyze the pages in '{Section}' to build a template. Any specific requirements?"
    Options:
@@ -370,16 +395,21 @@ Options:
    ```
 3. Read all `.md` pages in that section. If the user provided requirements, use them to guide the extraction (e.g. "focus on the action items section", "combine the agenda and notes patterns").
 4. Compare their structure to find common patterns:
-   - Same frontmatter keys appearing in ≥ 60% of pages → keep as `{{VARIABLE}}`
-   - Same heading hierarchy (##, ###) → keep the skeleton
-   - Body text that varies → replace with representative {{PLACEHOLDER}}
+
+   * Same frontmatter keys appearing in ≥ 60% of pages → keep as `{{VARIABLE}}`
+   * Same heading hierarchy (##, ###) → keep the skeleton
+   * Body text that varies → replace with representative {{PLACEHOLDER}}
 5. Show the extracted template and report: "Found N pages with similar structure in '{Section}'."
 6. Ask: "Save this template? Give it a name."
 7. Write to `{notes_root}/.templates/{name}.md`. From now on, `newpage` will include it.
 
-**Manual:** Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `newpage`.
 
----
+
+Manual:
+
+ Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `newpage`.
+
+***
 
 ## Import Pipeline
 
@@ -395,6 +425,7 @@ Options:
 ```
 
 If auto-export:
+
 ```
 Question: "Export to which directory?"
 Options: "Default (./onenote_export)" | "Custom path"
@@ -407,7 +438,7 @@ Requires Windows + Office 2016+, COM API.
 
 Run `<skill_dir>/tools/convert-xml2md.py` → converts XML to `{notes_root}/` preserving Notebook→Section→Page. `onenote_export/` is temporary — remind user to delete it.
 
----
+***
 
 ## File Naming
 
@@ -418,6 +449,7 @@ Default naming rules:
 | `daily` | `{date}.md` | `2026-07-29.md` |
 | `meeting` | `{date}-{topic}.md` | `2026-07-29-product-review.md` |
 | `quick-note` | `{date}-{title}.md` | `2026-07-29-idea.md` |
-| _(default)_ | `{title}.md` | `my-note.md` |
+|  (default)   | `{title}.md`        | `my-note.md`                   |
 
 > ⚠️ When editing this file, keep `SKILL-CN.md` (project root) in sync. It is the Chinese reference version for the plugin author.
+
