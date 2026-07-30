@@ -18,7 +18,7 @@ note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，
 
 > **无锁定。** 每个笔记本是一个文件夹，每个分区是一个子文件夹，每个页面是一个 `.md` 文件。你可以通过文件管理器直接创建、重命名、移动或删除任何内容 — Agent 会自动感知变化。命令只是可选的便利工具。
 
-> `{notes_root}` 在 `init` 中设定（默认：`./notes/`）。下文所有路径使用此变量。
+> `{notes_root}` 在 `/note2md init` 中设定（默认：`./notes/`）。下文所有路径使用此变量。
 
 ***
 
@@ -26,20 +26,20 @@ note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，
 
 | 命令 | 功能 |
 |------|------|
-| `help` | 显示快速入门指南 |
-| `init` | 设置向导 — 选择语言、确定根路径、导入或从头开始 |
-| `newnotebook [名称]` | 在 `{notes_root}` 下创建笔记本 |
-| `newsection [笔记本] [分区]` | 在笔记本内创建分区 |
-| `newpage` | 创建页面 — 选择模板或空白、指定位置、生成内容 |
-| `newtemplate` | 从分区中的同类页面提取模板 |
-| `securecheck` | 检查笔记中的敏感信息（密码、身份证、银行卡、API 令牌等） |
-| `archive` | 归档笔记本、分区或单个页面 |
+| `/note2md help` | 显示快速入门指南 |
+| `/note2md init` | 设置向导 — 选择语言、确定根路径、导入或从头开始 |
+| `/note2md newnotebook [名称]` | 在 `{notes_root}` 下创建笔记本 |
+| `/note2md newsection [笔记本] [分区]` | 在笔记本内创建分区 |
+| `/note2md newpage` | 创建页面 — 选择模板或空白、指定位置、生成内容 |
+| `/note2md newtemplate` | 从分区中的同类页面提取模板 |
+| `/note2md securecheck` | 检查笔记中的敏感信息（密码、身份证、银行卡、API 令牌等） |
+| `/note2md archive` | 归档笔记本、分区或单个页面 |
 
 ***
 
 ## `help` — 快速入门指南
 
-用户输入 `help` 时，用其选择的语言回复简要指南（默认中文）：
+用户输入 `/note2md help` 时，用其选择的语言回复简要指南（默认中文）：
 
 ```
 📓 note2md — 你的 Markdown 笔记本
@@ -53,8 +53,8 @@ note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，
   archive        清理旧的笔记本、分区或页面
 
 新用户？
-  输入 init 导入 OneNote 或创建第一个笔记本。
-  然后 newnotebook → newsection → newpage 开始写笔记。
+  输入 /note2md init 导入 OneNote 或创建第一个笔记本。
+  然后 /note2md newnotebook → newsection → newpage 开始写笔记。
 
 模板？
   newpage 始终提供模板选择。插件自带日记、会议、快速笔记三种。
@@ -118,7 +118,7 @@ OneNote？
 选项: "覆盖并导入" | "取消"
 ```
 
-取消则停止。否则以 `{notes_root}` 为目标运行[导入流程](#导入流程)。导入完成后告知用户："导入完成。对任意包含同类笔记的分区使用 `newtemplate` 即可创建模板。"
+取消则停止。否则以 `{notes_root}` 为目标运行[导入流程](#导入流程)。导入完成后告知用户："导入完成。对任意包含同类笔记的分区使用 `/note2md newtemplate` 即可创建模板。"
 
 #### 从头开始
 
@@ -134,7 +134,7 @@ OneNote？
    ```
 3. 询问："在 {Notebook} 中创建什么分区？"
 4. 创建 `{notes_root}/{Notebook}/{Section}/`
-5. 确认："就绪！「{Notebook}」和「Quick Notes」已创建。用 `newpage` 写第一篇笔记。"
+5. 确认："就绪！「{Notebook}」和「Quick Notes」已创建。用 `/note2md newpage` 写第一篇笔记。"
 
 ### Step 3 — 完成
 
@@ -146,10 +146,10 @@ OneNote？
 
 | 步骤 | 操作 |
 |------|------|
-| 1 | 获取名称 — 从参数（`newnotebook Work`）或询问用户 |
+| 1 | 获取名称 — 从参数（`/note2md newnotebook Work`）或询问用户 |
 | 2 | 若 `{notes_root}/{Name}/` 已存在 → 警告，换一个名字 |
 | 3 | 创建 `{notes_root}/{Name}/` |
-| 4 | 确认："笔记本「{Name}」已创建。用 `newsection` 添加分区。" |
+| 4 | 确认："笔记本「{Name}」已创建。用 `/note2md newsection` 添加分区。" |
 
 ***
 

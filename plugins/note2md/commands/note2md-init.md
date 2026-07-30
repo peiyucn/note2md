@@ -1,6 +1,6 @@
 ---
 name: init
-description: Setup wizard — pick language, choose root path, import OneNote or start fresh
+description: /note2md init — Setup wizard: pick language, choose root path, import OneNote or start fresh
 argument-hint: [root-path]
 ---
 

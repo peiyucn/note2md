@@ -1,6 +1,6 @@
 ---
 name: newtemplate
-description: Extract a template from a section of similar pages and save to .templates/
+description: /note2md newtemplate — Extract a template from a section of similar pages
 argument-hint: [section]
 ---
 

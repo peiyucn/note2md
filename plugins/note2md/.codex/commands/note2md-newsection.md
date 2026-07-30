@@ -1,6 +1,6 @@
 ---
 name: newsection
-description: Create a section inside a notebook
+description: /note2md newsection — Create a section inside a notebook
 argument-hint: [notebook] [section]
 ---
 

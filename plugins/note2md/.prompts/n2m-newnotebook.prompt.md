@@ -1,6 +1,6 @@
 ---
 name: newnotebook
-description: /note2md newnotebook — Create a new notebook
+description: Create a new notebook under the notes root directory
 argument-hint: [name]
 ---
 
