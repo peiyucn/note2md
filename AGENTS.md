@@ -21,6 +21,17 @@
   * `revert`: 回滚
 * 例：`feat: 新增命令自动补全`、`fix: 修复模板排序`、`docs: 补充命令交互流程文档`
 * **逐项提交**：每完成一个独立任务**必须**单独 `git commit`，禁止多个任务混在一个 commit 中（方便出问题时精确回溯）
+* **提交时机**：每轮对话结束时，Agent 应根据改动情况自行判断是否 `git commit` + `git push`，无需等用户发指令。判断标准：
+  * ✅ 该提交 — 一轮对话完成了一个独立的功能/修复/重构，改动原子化、可独立回溯
+  * ✅ 该提交 — 用户明确说「好了」「可以了」「提交吧」
+  * ❌ 先别交 — 还在讨论/探索/收集需求，方向未定
+  * ❌ 先别交 — 中途打断、单轮改动不完整、留了 TODO 没处理
+* **分支同步**：`push` 到 `dev` 后**必须**同步 `master`（`git push origin dev:master`）。Copilot Chat 市场安装拉的是 `master`，不同步会导致用户安装到旧版本
+* **版本标签**：每个里程碑（如首个可用版本、大功能批次完成）**必须**打 tag。同步 `plugin.json` 和 `marketplace.json` 中的 `version` 字段，然后：
+  ```bash
+  git tag -a v{version} -m "v{version}: {简要说明}"
+  git push origin v{version}
+  ```
 
 ***
 
@@ -37,15 +48,7 @@ plugins/note2md/
 │   ├── newtemplate.prompt.md
 │   ├── securecheck.prompt.md
 │   └── archive.prompt.md
-├── commands/                    — 命令文件（Claude Code + Codex 共用）
-│   ├── note2md-help.md
-│   ├── note2md-init.md
-│   ├── note2md-newnotebook.md
-│   ├── note2md-newsection.md
-│   ├── note2md-newpage.md
-│   ├── note2md-newtemplate.md
-│   ├── note2md-securecheck.md
-│   └── note2md-archive.md
+├── commands/                    — 命令文件（Claude Code + Codex 共用，...8 个 .md）
 ├── .codex/commands/             — 命令文件（Codex CLI 专用，...8 个 .md）
 ├── .claude-plugin/
 │   └── plugin.json              — Claude Code 插件清单（skills + commands + prompts）
@@ -83,9 +86,3 @@ plugins/note2md/
 * **诚实原则**：不确定的事直接说"不确定"，禁止编造 URL、API 接口、文档引用或任何事实性信息
 * **查证原则**：引用文件位置、函数名、调用关系时，若不确定则先 grep 确认再写，禁止凭记忆编造
 * **自检原则**：代码移动/提取后**必须**搜索确认旧位置已删除，不得留有死代码或同名遮蔽
-* **提交原则**：每轮对话结束时，Agent 应根据改动情况自行判断是否 `git commit` + `git push`，无需等用户发指令。判断标准：
-  * ✅ 该提交 — 一轮对话完成了一个独立的功能/修复/重构（如「SKILL.md 三处改动 + SKILL-CN.md + 命令文件 + README 全部同步完」），改动原子化、可独立回溯
-  * ✅ 该提交 — 用户明确说「好了」「可以了」「提交吧」
-  * ❌ 先别交 — 还在讨论/探索/收集需求，方向未定
-  * ❌ 先别交 — 中途打断、单轮改动不完整、留了 TODO 没处理
-* **分支同步**：`push` 到 `dev` 后**必须**同步 `master`（`git push origin dev:master`）。Copilot Chat 市场安装拉的是 `master`，不同步会导致用户安装到旧版本
