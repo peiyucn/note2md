@@ -80,3 +80,4 @@ plugins/note2md/
   * ✅ 该提交 — 用户明确说「好了」「可以了」「提交吧」
   * ❌ 先别交 — 还在讨论/探索/收集需求，方向未定
   * ❌ 先别交 — 中途打断、单轮改动不完整、留了 TODO 没处理
+* **分支同步**：`push` 到 `dev` 后**必须**同步 `master`（`git push origin dev:master`）。Copilot Chat 市场安装拉的是 `master`，不同步会导致用户安装到旧版本
