@@ -90,25 +90,16 @@ Use the chosen language for all subsequent prompts, confirmations, and generated
 
 ### Step 1 — Root Path
 
-Scan for existing directories named `notes/`, `notebooks/`, or `docs/`.
+Don't scan or guess. Just ask:
 
-**If found:**
 ```
-Question: "I found '{path}/'. Use it for your notes?"
+Question: "Use the current directory '{cwd}' as your notes root?"
 Options:
-  - "Use {path}/"
-  - "Let me specify another path"
+  - "Yes — use {cwd}/"
+  - "No — let me specify a path"
 ```
 
-**If not found:**
-```
-Question: "Where to create your notes directory?"
-Options:
-  - "Create ./notes/ here"
-  - "Let me specify a custom path"
-```
-
-Record the result as `{notes_root}`. Default: `./notes/`.
+If user specifies a path, use that. Otherwise use `{cwd}/`. Record the result as `{notes_root}`.
 
 ### Step 2 — Mode
 
@@ -174,6 +165,10 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 
 Template-first; "blank page" always available as the last option.
 
+**Fast path**: `/n2m:newpage` with no argument → skip template selection, create a blank page directly. User only needs to pick destination and title.
+
+**With argument**: `/n2m:newpage daily` → use daily template; `/n2m:newpage meeting` → use meeting template, etc.
+
 ### Step 1 — Discover Templates
 
 Scan in priority order:
@@ -182,15 +177,20 @@ Scan in priority order:
 
 Plugins defaults: `daily.md`, `meeting.md`, `quick-note.md`. See [Template System](#template-system).
 
-### Step 2 — Present Choices
+### Step 2 — Resolve Template
+
+| Condition | Action |
+|-----------|--------|
+| `/n2m:newpage` (no argument) | Skip to Step 3 — blank page |
+| `/n2m:newpage {name}` (argument provided) | Try exact match against discovered templates. If found → use it. If not found or ambiguous → present choices: |
 
 ```
 Question: "Which template?"
 Options:
+  - ...any user templates found in .templates/...  ← user templates FIRST
   - "📅 Daily Journal (daily)"
   - "🤝 Meeting Notes (meeting)"
   - "💡 Quick Note (quick-note)"
-  - ...any user templates found in .templates/...
   - "📄 Blank page — no template"
 ```
 
@@ -309,14 +309,22 @@ Use your judgment — if it walks like a secret, flag it.
 ### Procedure
 
 1. Announce: "Scanning your notes for sensitive information…"
-2. Search across `{notes_root}/` (skip `_archive/` and `.templates/`)
-3. For each match:
+2. Ask if user wants to add custom checks:
+   ```
+   Question: "I'll check for passwords, IDs, bank cards, API keys, and personal contact info. Anything else to look for?"
+   Options:
+     - "No — just the defaults" (default)
+     - "Let me add custom patterns" (free text input — e.g. "internal project codes like PRJ-XXXX", "company confidential headers")
+   ```
+   If custom patterns provided, add them to the scan list.
+3. Search across `{notes_root}/` (skip `_archive/` and `.templates/`)
+4. For each match:
    - Report the file path and line number
    - Show the matching category (NOT the actual sensitive value)
    - Example: `⚠️ notes/Work/项目/密码本.md:12 — Possible password`
-4. **Never output the actual sensitive value.** Use `[REDACTED]` if context is needed.
-5. Summary: "Found N potential issues across M files."
-6. Remind: "You can move sensitive files to _archive/ or delete them. Use /n2m:archive to clean up."
+5. **Never output the actual sensitive value.** Use `[REDACTED]` if context is needed.
+6. Summary: "Found N potential issues across M files."
+7. Remind: "You can move sensitive files to _archive/ or delete them. Use /n2m:archive to clean up."
 
 ### Scope Options
 
