@@ -1,5 +1,5 @@
 ---
-name: n2m:newnotebook
+name: newnotebook
 description: Create a new notebook under the notes root directory
 argument-hint: [name]
 ---

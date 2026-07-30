@@ -1,5 +1,5 @@
 ---
-name: n2m:help
+name: help
 description: Show quick-start guide and command reference for note2md
 argument-hint: []
 ---

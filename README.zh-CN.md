@@ -31,10 +31,10 @@
 | `/n2m:securecheck` | 检查笔记中的密码、身份证、API 密钥等敏感信息 |
 | `/n2m:archive` | 将旧的笔记本、分区或页面移入 `_archive/` |
 
-> **Copilot Chat** — 输入 `/note2md` 然后 Tab 查看 8 个子命令（如 `/note2md n2m:newpage`）。
-> **Claude Code / Codex** — 输入 `/n2m-` 然后 Tab 自动补全。
+> **Copilot Chat** — 输入 `/note2md` 然后 Tab 查看 8 个子命令（如 `/note2md newpage`）。
+> **Claude Code / Codex** — 输入 `/note2md-` 然后 Tab 自动补全。
 
-第一次用？输入 `/note2md n2m:help`（Copilot）或 `/n2m:help`（Claude/Codex）快速了解。
+第一次用？输入 `/note2md help`（Copilot）或 `/note2md-help`（Claude/Codex）快速了解。
 
 ### 无锁定
 

@@ -31,10 +31,10 @@ All agents use the same commands:
 | `/n2m:securecheck` | Scan your notes for passwords, IDs, API keys, and other sensitive data |
 | `/n2m:archive` | Move old notebooks, sections, or pages to `_archive/` |
 
-> **Copilot Chat** — Type `/note2md` then Tab to see all 8 sub-commands (e.g. `/note2md n2m:newpage`).
-> **Claude Code / Codex** — Type `/n2m-` then Tab for autocomplete.
+> **Copilot Chat** — Type `/note2md` then Tab to see all 8 sub-commands (e.g. `/note2md newpage`).
+> **Claude Code / Codex** — Type `/note2md-` then Tab for autocomplete.
 
-First time? Type `/note2md n2m:help` (Copilot) or `/n2m:help` (Claude/Codex) for a quick tour.
+First time? Type `/note2md help` (Copilot) or `/note2md-help` (Claude/Codex) for a quick tour.
 
 ### No lock-in
 

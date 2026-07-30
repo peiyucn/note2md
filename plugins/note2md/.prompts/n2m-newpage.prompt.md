@@ -1,5 +1,5 @@
 ---
-name: n2m:newpage
+name: newpage
 description: Create a page — no argument = blank page; daily/meeting/quick-note = use template
 argument-hint: [template]
 ---

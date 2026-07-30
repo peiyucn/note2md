@@ -37,7 +37,15 @@ plugins/note2md/
 │   ├── n2m-newtemplate.prompt.md
 │   ├── n2m-securecheck.prompt.md
 │   └── n2m-archive.prompt.md
-├── commands/                    — 命令文件（Claude Code + Codex 共用，...8 个 .md）
+├── commands/                    — 命令文件（Claude Code + Codex 共用）
+│   ├── note2md-help.md
+│   ├── note2md-init.md
+│   ├── note2md-newnotebook.md
+│   ├── note2md-newsection.md
+│   ├── note2md-newpage.md
+│   ├── note2md-newtemplate.md
+│   ├── note2md-securecheck.md
+│   └── note2md-archive.md
 ├── .codex/commands/             — 命令文件（Codex CLI 专用，...8 个 .md）
 ├── .claude-plugin/
 │   └── plugin.json              — Claude Code 插件清单（skills + commands + prompts）
