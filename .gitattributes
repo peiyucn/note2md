@@ -1,0 +1,14 @@
+# Auto-detect text files and normalize line endings
+* text=auto
+
+# Markdown and YAML — always LF
+*.md text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+
+# JSON — always LF
+*.json text eol=lf
+
+# Scripts
+*.ps1 text eol=lf
+*.py text eol=lf
