@@ -1,5 +1,5 @@
 ---
-name: n2m-newtemplate
+name: n2m:newtemplate
 description: Extract a template from a section of similar pages and save to .templates/
 argument-hint: [section]
 ---

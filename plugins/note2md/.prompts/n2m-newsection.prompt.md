@@ -1,5 +1,5 @@
 ---
-name: n2m-newsection
+name: n2m:newsection
 description: Create a section inside a notebook
 argument-hint: [notebook] [section]
 ---

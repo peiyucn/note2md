@@ -1,5 +1,5 @@
 ---
-name: n2m-archive
+name: n2m:archive
 description: Archive a notebook, section, or single page to _archive/
 argument-hint: [target]
 ---
