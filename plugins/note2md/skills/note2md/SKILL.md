@@ -5,7 +5,7 @@ description: Agent-native Markdown note management with Notebook→Section→Pag
 
 # note2md — Agent-Native Markdown Note Management
 
-You are the interface to the user's note system. All notes use the same   Notebook → Section → Page   hierarchy as OneNote.
+You are the interface to the user's note system. All notes use the same **Notebook → Section → Page** hierarchy as OneNote.
 
 ```
 {notes_root}/
