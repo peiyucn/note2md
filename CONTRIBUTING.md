@@ -18,13 +18,13 @@ pyskills/                              # Repo root = marketplace
 ├── plugins/note2md/                   # Plugin shipped by this marketplace
 │   ├── .claude-plugin/plugin.json     # Plugin metadata
 │   ├── commands/                      # Slash-command stubs (thin shells)
+│   ├── SKILL-CN.md                    # Chinese reference for the author (not loaded by agents)
 │   └── skills/note2md/
 │       ├── SKILL.md                   # Agent behavior — all command logic lives here
 │       ├── templates/                 # Built-in page templates
 │       └── tools/
 │           ├── export-onenote.ps1     # OneNote COM export (Windows)
 │           └── convert-xml2md.py      # XML → Markdown converter
-└── SKILL-CN.md                        # Chinese reference for the author (not loaded by agents)
 
 > `notes/` and `.templates/` are user-space — they do not live in this repo.
 > `test/` is a scratch directory for manual testing — gitignored.

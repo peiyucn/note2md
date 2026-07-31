@@ -79,7 +79,7 @@ pyskills/                          — 仓库根 = 市场
 | `.claude-plugin/marketplace.json` | 市场货架清单。`name` 即市场名（pyskills），插件条目声明 `source: ./plugins/note2md`；多余字段被各平台静默忽略 |
 | `docs/agent-compatibility.md` | 三平台兼容性分析与决策记录（市场/插件安装/命令注册机制） |
 | `plugins/note2md/skills/note2md/SKILL.md` | **核心**：所有 8 个命令的完整交互流程。是唯一需要维护逻辑的地方 |
-| `SKILL-CN.md` | SKILL.md 的中文同步翻译，仅供作者对照。**修改 SKILL.md 时必须同步更新** |
+| `plugins/note2md/SKILL-CN.md` | SKILL.md 的中文同步翻译，仅供作者对照。**修改 SKILL.md 时必须同步更新** |
 | `plugins/note2md/commands/*.md` | 薄壳——仅含 frontmatter（name + description + argument-hint）+ 一句委托指令 |
 | `plugins/note2md/.claude-plugin/plugin.json` | 插件清单，声明 commands 路径；skills 目录自动发现 |
 

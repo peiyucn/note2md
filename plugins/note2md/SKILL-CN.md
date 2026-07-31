@@ -1,5 +1,5 @@
 ﻿---
-note: 本文是 plugins/note2md/skills/note2md/SKILL.md 的中文同步翻译，仅供作者对照检查。不被任何 Agent 加载。修改 SKILL.md 时必须同步更新本文。
+note: 本文是 skills/note2md/SKILL.md 的中文同步翻译，仅供作者对照检查。不被任何 Agent 加载。修改 SKILL.md 时必须同步更新本文。
 ---
 # note2md — Agent 原生 Markdown 笔记管理
 

@@ -466,5 +466,5 @@ Default naming rules:
 | `quick-note` | `{date}-{title}.md` | `2026-07-29-idea.md` |
 |  (default)   | `{title}.md`        | `my-note.md`                   |
 
-> ⚠️ When editing this file, keep `SKILL-CN.md` (project root) in sync. It is the Chinese reference version for the plugin author.
+> ⚠️ When editing this file, keep `SKILL-CN.md` (`../SKILL-CN.md`) in sync. It is the Chinese reference version for the plugin author.
 
