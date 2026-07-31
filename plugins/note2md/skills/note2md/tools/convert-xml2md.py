@@ -13,6 +13,7 @@ Example:
 """
 
 import argparse
+import html
 import os
 import re
 import sys
@@ -47,7 +48,8 @@ def _text_in_subtree(element: ET.Element) -> str:
             parts.append(t.text)
     raw = "".join(parts)
     # Strip OneNote inline HTML spans (e.g. <span style='...' lang=...>text</span>)
-    return re.sub(r"<[^>]+>", "", raw)
+    raw = re.sub(r"<[^>]+>", "", raw)
+    return html.unescape(raw)
 
 
 def _strip_html(text: str) -> str:
@@ -113,6 +115,15 @@ def _convert_oe_tree(element: ET.Element, depth: int = 0) -> list[str]:
     # Collect children that are meaningful
     children = list(element)
 
+    # If this OE has container children (Table, OEChildren), it's just a wrapper;
+    # skip its own text and only recurse into children
+    for child in children:
+        child_tag = child.tag.split("}")[-1] if "}" in child.tag else child.tag
+        if child_tag in ("Table", "OEChildren"):
+            for c in children:
+                lines.extend(_convert_oe_tree(c, depth))
+            return lines
+
     # ---- HEADING ----
     heading_level = _detect_heading_level(element)
     if heading_level:
@@ -152,10 +163,19 @@ def _convert_oe_tree(element: ET.Element, depth: int = 0) -> list[str]:
         for row_elem in element.findall(f"one:Row", NS):
             cells = []
             for cell in row_elem.findall(f"one:Cell", NS):
-                cells.append(_text_in_subtree(cell).strip().replace("\n", " "))
-            rows.append(cells)
+                # Process each OE within the cell separately to preserve line breaks
+                oe_texts = []
+                for oe in cell.findall(f"one:OEChildren/one:OE", NS):
+                    t = _text_in_subtree(oe).strip()
+                    if t:
+                        oe_texts.append(t)
+                # Join with HTML <br> for line breaks within cells
+                cells.append(" <br> ".join(oe_texts))
+            # Skip empty rows (all cells empty)
+            if any(c for c in cells):
+                rows.append(cells)
 
-        if not rows:
+        if not rows:   
             return []
 
         # Build Markdown table
@@ -254,13 +274,24 @@ def convert_page_xml(xml_path: Path) -> tuple[dict, str]:
     if title:
         body_lines.append(f"# {title}\n")
 
-    # Process all top-level OEs
-    for oe in root.findall(f".//one:Outline//one:OEChildren/one:OE", NS):
-        body_lines.extend(_convert_oe_tree(oe))
-    for oe in root.findall(f".//one:OEChildren/one:OE", NS):
-        body_lines.extend(_convert_oe_tree(oe))
+    # Process all top-level OEs (avoid double-processing with a single XPath)
+    seen_ids = set()
+    for oe in root.findall(f".//one:Outline/one:OEChildren/one:OE", NS):
+        oe_id = oe.get("objectID", "")
+        if oe_id not in seen_ids:
+            seen_ids.add(oe_id)
+            body_lines.extend(_convert_oe_tree(oe))
+    # Also process direct page OEs (outside Outline)
+    page_elem = root.find(f"one:Page", NS) or root
+    for oe_children in page_elem.findall(f"one:OEChildren", NS):
+        for oe in oe_children.findall(f"one:OE", NS):
+            oe_id = oe.get("objectID", "")
+            if oe_id not in seen_ids:
+                seen_ids.add(oe_id)
+                body_lines.extend(_convert_oe_tree(oe))
 
     body = _clean_markdown("\n".join(body_lines))
+    body = html.unescape(body)
     return frontmatter, body
 
 
