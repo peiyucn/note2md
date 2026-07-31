@@ -113,6 +113,22 @@ Options:
 
 #### Import Path
 
+**Prerequisite — Python check:**
+
+Before import, verify Python is available by running `python --version` or `python3 --version`. If neither works:
+
+```
+Question: "OneNote import requires Python 3. To install it, run: winget install Python.Python.3.12
+Or download from https://python.org. After installing, re-run init. Ready to continue?"
+Options:
+  - "I'll install Python and come back"
+  - "Skip import — start fresh instead"
+```
+
+If user skips, fall back to the Fresh Start path. Otherwise, wait for them to install and retry.
+
+**Start import:**
+
 If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
 
 ```

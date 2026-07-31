@@ -111,6 +111,22 @@ OneNote？
 
 #### 导入路径
 
+**前置条件 — Python 环境检测：**
+
+导入前先运行 `python --version` 或 `python3 --version` 检查 Python 是否可用。如果都不行：
+
+```
+问题: "OneNote 导入需要 Python 3。安装方法：winget install Python.Python.3.12
+或从 https://python.org 下载。安装后重新运行 init。是否继续？"
+选项:
+  - "我去安装 Python，稍后回来"
+  - "跳过导入 — 改为从头开始"
+```
+
+如果用户跳过，回退到从头开始路径。否则等用户装好后重试。
+
+**开始导入：**
+
 如果 `{notes_root}/` 已有笔记本（`_archive/` 除外），警告：
 
 ```

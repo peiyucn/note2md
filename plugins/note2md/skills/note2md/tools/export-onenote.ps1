@@ -76,6 +76,8 @@ foreach ($notebook in $notebooks) {
             try {
                 $pageXml = ""
                 $onenote.GetPageContent($pageId, [ref]$pageXml, 0)
+                # Strip OneNote's own XML declaration (avoids duplicate)
+                $pageXml = $pageXml -replace '^<\?xml[^?]*\?>\s*', ''
                 $prettyXml = '<?xml version="1.0" encoding="UTF-8"?>' + "`r`n" + $pageXml
                 [System.IO.File]::WriteAllText($pageFile, $prettyXml, $utf8NoBom)
                 Write-Host "    OK: $pageName" -ForegroundColor Green
@@ -99,3 +101,6 @@ Write-Host "Sections:  $totalSections"
 Write-Host "Exported:  $totalPages pages"
 Write-Host "Skipped:   $skipped"
 Write-Host "Failed:    $failed"
+
+# Release COM object to avoid locking OneNote
+[System.Runtime.Interopservices.Marshal]::ReleaseComObject($onenote) | Out-Null

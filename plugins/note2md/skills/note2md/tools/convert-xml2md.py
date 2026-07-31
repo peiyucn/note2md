@@ -20,6 +20,13 @@ import xml.etree.ElementTree as ET
 from datetime import datetime
 from pathlib import Path
 
+# Windows 终端 GBK 编码兼容：强制 stdout 使用 UTF-8
+if sys.platform == "win32":
+    try:
+        sys.stdout.reconfigure(encoding="utf-8")
+    except Exception:
+        pass
+
 ONENOTE_NS = "http://schemas.microsoft.com/office/onenote/2013/onenote"
 ET.register_namespace("", ONENOTE_NS)
 NS = {"one": ONENOTE_NS}
@@ -28,16 +35,24 @@ NS = {"one": ONENOTE_NS}
 
 def _safe_name(name: str) -> str:
     """Replace filesystem-unsafe characters."""
+    name = name.replace("\n", "").replace("\r", "")
     return re.sub(r'[\\/:*?"<>|]', "_", name)
 
 
 def _text_in_subtree(element: ET.Element) -> str:
-    """Collect all text from <one:T> descendants, preserving order."""
+    """Collect all text from <one:T> descendants, stripping OneNote inline HTML spans."""
     parts = []
     for t in element.iter(f"{{{ONENOTE_NS}}}T"):
         if t.text:
             parts.append(t.text)
-    return "".join(parts)
+    raw = "".join(parts)
+    # Strip OneNote inline HTML spans (e.g. <span style='...' lang=...>text</span>)
+    return re.sub(r"<[^>]+>", "", raw)
+
+
+def _strip_html(text: str) -> str:
+    """Remove HTML tags from text (used for OneNote inline formatting)."""
+    return re.sub(r"<[^>]+>", "", text)
 
 
 def _is_list_item(elem: ET.Element) -> bool:
@@ -203,9 +218,16 @@ def convert_page_xml(xml_path: Path) -> tuple[dict, str]:
         page_meta = root
 
     title = ""
-    title_elem = root.find(f".//one:Title//one:T", NS)
-    if title_elem is not None and title_elem.text:
-        title = title_elem.text.strip()
+    # Prefer page name attribute (clean, no formatting cruft)
+    title = page_meta.get("name", "").strip()
+    # Fallback: extract from Title OE subtree
+    if not title:
+        title_oe = root.find(f".//one:Title/one:OE", NS)
+        if title_oe is not None:
+            title = _text_in_subtree(title_oe).strip()
+    # Last resort: filename
+    if not title:
+        title = xml_path.stem
 
     page_date = ""
     date_attr = page_meta.get("dateTime") or page_meta.get("lastModifiedTime", "")
