@@ -1,6 +1,6 @@
-# 参与贡献 note2md
+# 参与贡献 pyskills
 
-简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/note2md)
+简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/pyskills)
 
 ## 分支策略
 
@@ -17,19 +17,21 @@
 ## 项目结构
 
 ```
-note2md/
-├── .claude-plugin/marketplace.json       # Claude Code 市场注册
-├── plugins/note2md/
-│   ├── .claude-plugin/plugin.json        # 插件元信息
+pyskills/                              # 仓库根 = 市场
+├── .claude-plugin/marketplace.json    # 市场货架清单（name: pyskills）
+├── plugins/note2md/                   # 市场提供的插件
+│   ├── .claude-plugin/plugin.json     # 插件元信息
+│   ├── commands/                      # 斜杠命令薄壳
 │   └── skills/note2md/
-│       ├── SKILL.md                      # Agent 行为 — 所有命令逻辑在此
-│       ├── templates/                    # 内置页面模板
+│       ├── SKILL.md                   # Agent 行为 — 所有命令逻辑在此
+│       ├── templates/                 # 内置页面模板
 │       └── tools/
-│           ├── export-onenote.ps1        # OneNote COM 导出（Windows）
-│           └── convert-xml2md.py         # XML → Markdown 转换器
-└── SKILL-CN.md                           # 作者中文参考（不被 Agent 加载）
+│           ├── export-onenote.ps1     # OneNote COM 导出（Windows）
+│           └── convert-xml2md.py      # XML → Markdown 转换器
+└── SKILL-CN.md                        # 作者中文参考（不被 Agent 加载）
 
 > `notes/` 和 `.templates/` 属于用户空间 — 不在此仓库中。
+> `test/` 是手工测试用的临时目录 — 已被 git 忽略。
 ```
 
 ## 工作原理

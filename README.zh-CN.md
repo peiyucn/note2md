@@ -1,22 +1,26 @@
-﻿# note2md 📓
+﻿# pyskills — Agent 技能市场
 
-简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/note2md)
+简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/pyskills)
 
-> Markdown 笔记，按笔记本→分区→页面三层结构组织，通过斜杠命令管理。
+> Agent 原生技能，可在 Copilot、Claude Code、Codex 上通用安装。本仓库是一个**市场** — 添加一次，即可安装它提供的任意插件。
 
-## 为什么用这个
+## 安装市场
 
-你的笔记就是文件夹和 `.md` 文件 — 用任何编辑器都能打开。但 Agent 也能帮你管理：创建笔记本、组织分区、从模板写页面、从 OneNote 导入、归档旧内容。
+**VS Code Copilot** — 添加市场 `https://github.com/peiyucn/pyskills`，然后安装你需要的插件。
 
-## 安装
+**Claude Code** — 先 `/marketplace add https://github.com/peiyucn/pyskills`，再 `/plugin install note2md`。
 
-**VS Code Copilot** — 添加市场 `https://github.com/peiyucn/note2md`，然后安装 `note2md`。
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/pyskills`（安装市场内的全部插件）。
 
-**Claude Code** — 先 `/marketplace add https://github.com/peiyucn/note2md`，再 `/plugin install note2md`。
+## 插件
 
-**Codex CLI** — `codex plugin install https://github.com/peiyucn/note2md`。
+### note2md 📓
 
-## 命令
+Markdown 笔记，按笔记本→分区→页面三层结构组织，通过斜杠命令管理。你的笔记就是文件夹和 `.md` 文件 — 用任何编辑器都能打开。但 Agent 也能帮你管理：创建笔记本、组织分区、从模板写页面、从 OneNote 导入、归档旧内容。
+
+安装：`note2md` 插件。
+
+#### 命令
 
 所有 Agent 使用统一命令：
 
@@ -36,11 +40,11 @@
 
 第一次用？输入 `/note2md help`（Copilot）或 `/note2md-help`（Claude/Codex）快速了解。
 
-### 无锁定
+#### 无锁定
 
 笔记本 = 文件夹。分区 = 子文件夹。页面 = `.md` 文件。你可以通过文件管理器创建、重命名、移动或删除任何内容 — Agent 自动感知变化。命令只是可选的便利工具。
 
-## 模板
+#### 模板
 
 `/note2md newpage` 始终提供模板选择。插件自带三个默认模板：
 
@@ -54,7 +58,7 @@
 
 使用 `/note2md newtemplate` 从任意分区中提取模板 — 选择分区、可选描述需求，Agent 会从同类笔记中提炼出模板骨架。
 
-## OneNote 导入
+#### OneNote 导入
 
 使用 `/note2md init` 导入你现有的 OneNote 笔记本。Agent 会引导你完成导出（需要 Windows + OneNote 桌面版）和 Markdown 转换。结果：`notes/` 完全镜像你原始的 笔记本 → 分区 → 页面 结构。不会过滤任何内容。
 

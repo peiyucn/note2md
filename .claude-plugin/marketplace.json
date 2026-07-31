@@ -1,12 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "note2md",
-  "description": "Agent-native Markdown note management with Notebook→Section→Page hierarchy. Slash commands: init, newnotebook, newpage, newtemplate, archive, securecheck, and more — all under the note2md namespace. Smart templates learned from your own notes. OneNote import support. Works across Copilot, Claude Code, and Codex.",
+  "name": "pyskills",
+  "description": "Agent-native skills marketplace. Currently ships note2md — Markdown note management with Notebook→Section→Page hierarchy, slash commands, OneNote import, and smart templates. Works across Copilot, Claude Code, and Codex.",
   "owner": {
     "name": "peiyucn"
   },
-  "homepage": "https://github.com/peiyucn/note2md",
-  "repository": "https://github.com/peiyucn/note2md",
+  "homepage": "https://github.com/peiyucn/pyskills",
+  "repository": "https://github.com/peiyucn/pyskills",
   "plugins": [
     {
       "name": "note2md",

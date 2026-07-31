@@ -1,4 +1,4 @@
-# 项目指令 — note2md
+# 项目指令 — pyskills
 
 ## 语言
 
@@ -27,7 +27,7 @@
   * ❌ 先别交 — 还在讨论/探索/收集需求，方向未定
   * ❌ 先别交 — 中途打断、单轮改动不完整、留了 TODO 没处理
 * **分支同步**：`push` 到 `dev` 后**必须**同步 `master`（`git push origin dev:master`）。Copilot Chat 市场安装拉的是 `master`，不同步会导致用户安装到旧版本
-* **版本标签**：每个里程碑（如首个可用版本、大功能批次完成）**必须**打 tag。同步 `plugin.json` 和 `marketplace.json` 中的 `version` 字段，然后：
+* **版本标签**：每个里程碑（如首个可用版本、大功能批次完成）**必须**打 tag。同步 `plugin.json` 中的 `version` 字段（市场 `marketplace.json` 无 version 字段），然后：
   ```bash
   git tag -a v{version} -m "v{version}: {简要说明}"
   git push origin v{version}
@@ -37,30 +37,39 @@
 
 ## 项目结构
 
+仓库根即**市场（marketplace）**，插件放在 `plugins/` 下：
+
 ```
-plugins/note2md/
-├── commands/                    — 命令文件（8 个 .md，三平台通用：Claude Code / Codex / Copilot 均自动发现，命名空间 /note2md:xxx）
+pyskills/                          — 仓库根 = 市场
 ├── .claude-plugin/
-│   └── plugin.json              — Claude Code 插件清单（声明 commands；skills 目录自动发现）
-├── skills/note2md/
-│   ├── SKILL.md                 — **单一真相来源**：所有命令的完整执行逻辑
-│   ├── templates/               — 内置模板（daily / meeting / quick-note）
-│   │   ├── daily.md
-│   │   ├── meeting.md
-│   │   └── quick-note.md
-│   └── tools/
-│       ├── export-onenote.ps1   — OneNote 自动导出（Windows + COM API）
-│       └── convert-xml2md.py    — OneNote XML → Markdown 转换
+│   └── marketplace.json           — 市场货架清单（name: pyskills；三平台均识别此路径）
+├── docs/
+│   └── agent-compatibility.md     — 三平台兼容性分析与决策记录（为什么用 .claude-plugin 统一兼容）
+├── plugins/note2md/               — 市场下的插件（插件名保持 note2md，命令命名空间 /note2md:xxx）
+│   ├── commands/                  — 命令文件（8 个 .md，三平台通用：Claude Code / Codex / Copilot 均自动发现，命名空间 /note2md:xxx）
+│   ├── .claude-plugin/
+│   │   └── plugin.json            — 插件清单（声明 commands；skills 目录自动发现）
+│   └── skills/note2md/
+│       ├── SKILL.md               — **单一真相来源**：所有命令的完整执行逻辑
+│       ├── templates/             — 内置模板（daily / meeting / quick-note）
+│       │   ├── daily.md
+│       │   ├── meeting.md
+│       │   └── quick-note.md
+│       └── tools/
+│           ├── export-onenote.ps1 — OneNote 自动导出（Windows + COM API）
+│           └── convert-xml2md.py  — OneNote XML → Markdown 转换
 ```
 
 ### 关键文件
 
 | 文件 | 作用 |
 |------|------|
-| `skills/note2md/SKILL.md` | **核心**：所有 8 个命令的完整交互流程。是唯一需要维护逻辑的地方 |
+| `.claude-plugin/marketplace.json` | 市场货架清单。`name` 即市场名（pyskills），插件条目声明 `source: ./plugins/note2md`；多余字段被各平台静默忽略 |
+| `docs/agent-compatibility.md` | 三平台兼容性分析与决策记录（市场/插件安装/命令注册机制） |
+| `plugins/note2md/skills/note2md/SKILL.md` | **核心**：所有 8 个命令的完整交互流程。是唯一需要维护逻辑的地方 |
 | `SKILL-CN.md` | SKILL.md 的中文同步翻译，仅供作者对照。**修改 SKILL.md 时必须同步更新** |
-| `commands/*.md` | 薄壳——仅含 frontmatter（name + description + argument-hint）+ 一句委托指令 |
-| `plugin.json` | Claude Code 插件清单，声明 commands 路径；skills 目录自动发现 |
+| `plugins/note2md/commands/*.md` | 薄壳——仅含 frontmatter（name + description + argument-hint）+ 一句委托指令 |
+| `plugins/note2md/.claude-plugin/plugin.json` | 插件清单，声明 commands 路径；skills 目录自动发现 |
 
 ### 设计原则
 

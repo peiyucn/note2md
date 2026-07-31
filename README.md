@@ -1,22 +1,26 @@
-﻿# note2md 📓
+﻿# pyskills — Agent Skills Marketplace
 
-[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/note2md)
+[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/pyskills)
 
-> Markdown notes with Notebook→Section→Page hierarchy, managed through slash commands.
+> Agent-native skills, installable across Copilot, Claude Code, and Codex. This repo is a **marketplace** — add it once, then install any plugin it ships.
 
-## Why
+## Install the Marketplace
 
-Your notes are just folders and `.md` files — open them in any editor. But an agent can also manage them: create notebooks, organize sections, write pages from templates, import from OneNote, archive old content.
+**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/pyskills`, then install the plugins you want.
 
-## Install
+**Claude Code** — `/marketplace add https://github.com/peiyucn/pyskills` then `/plugin install note2md`.
 
-**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/note2md`, then install `note2md`.
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/pyskills` (installs all plugins in the marketplace).
 
-**Claude Code** — `/marketplace add https://github.com/peiyucn/note2md` then `/plugin install note2md`.
+## Plugins
 
-**Codex CLI** — `codex plugin install https://github.com/peiyucn/note2md`.
+### note2md 📓
 
-## Commands
+Markdown notes with Notebook→Section→Page hierarchy, managed through slash commands. Your notes are just folders and `.md` files — open them in any editor. But an agent can also manage them: create notebooks, organize sections, write pages from templates, import from OneNote, archive old content.
+
+Install: `note2md` plugin.
+
+#### Commands
 
 All agents use the same commands:
 
@@ -36,11 +40,11 @@ All agents use the same commands:
 
 First time? Type `/note2md help` (Copilot) or `/note2md-help` (Claude/Codex) for a quick tour.
 
-### No lock-in
+#### No lock-in
 
 Notebook = folder. Section = subfolder. Page = `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up changes automatically. Commands are optional convenience.
 
-## Templates
+#### Templates
 
 `/note2md newpage` always offers templates. Three built-in defaults ship with the plugin:
 
@@ -54,7 +58,7 @@ Add your own templates to `notes/.templates/` — they automatically appear in `
 
 Use `/note2md newtemplate` to extract a template from any section with similar pages — pick a section, optionally describe what you want, and the agent builds a template skeleton from the common patterns it finds.
 
-## OneNote Import
+#### OneNote Import
 
 Use `/note2md init` to import your existing OneNote notebooks. The agent guides you through export (Windows + OneNote desktop required) and markdown conversion. Result: `notes/` mirrors your original Notebook → Section → Page structure exactly. No content is filtered.
 
