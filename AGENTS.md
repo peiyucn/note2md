@@ -39,16 +39,7 @@
 
 ```
 plugins/note2md/
-├── .prompts/                    — 命令文件（Copilot Chat 专用，*.prompt.md）
-│   ├── help.prompt.md
-│   ├── init.prompt.md
-│   ├── newnotebook.prompt.md
-│   ├── newsection.prompt.md
-│   ├── newpage.prompt.md
-│   ├── newtemplate.prompt.md
-│   ├── securecheck.prompt.md
-│   └── archive.prompt.md
-├── commands/                    — 命令文件（Claude Code 专用，8 个 .md，自动命名空间 /note2md:xxx）
+├── commands/                    — 命令文件（8 个 .md，三平台通用：Claude Code / Codex / Copilot 均自动发现，命名空间 /note2md:xxx）
 ├── .claude-plugin/
 │   └── plugin.json              — Claude Code 插件清单（声明 commands；skills 目录自动发现）
 ├── skills/note2md/
@@ -68,14 +59,14 @@ plugins/note2md/
 |------|------|
 | `skills/note2md/SKILL.md` | **核心**：所有 8 个命令的完整交互流程。是唯一需要维护逻辑的地方 |
 | `SKILL-CN.md` | SKILL.md 的中文同步翻译，仅供作者对照。**修改 SKILL.md 时必须同步更新** |
-| `commands/*.md` / `.prompts/*.md` | 薄壳——仅含 frontmatter（name + description + argument-hint）+ 一句委托指令 |
+| `commands/*.md` | 薄壳——仅含 frontmatter（name + description + argument-hint）+ 一句委托指令 |
 | `plugin.json` | Claude Code 插件清单，声明 commands 路径；skills 目录自动发现 |
 
 ### 设计原则
 
-* **薄壳原则**：`commands/`、`.prompts/` 两个目录下的文件内容完全一致（仅扩展名不同），都只做委托。不重复维护逻辑
+* **薄壳原则**：`commands/` 只做委托，不重复维护逻辑
 * **统一 frontmatter**：命令文件使用同一套 YAML frontmatter（`name` + `description` + `argument-hint`）。多余字段被各平台静默忽略，不报错
-* **修改流程**：改逻辑 → 只改 `SKILL.md` → 同步 `SKILL-CN.md`。如果改了命令的 frontmatter 字段 → 同步更新两个目录下对应文件
+* **修改流程**：改逻辑 → 只改 `SKILL.md` → 同步 `SKILL-CN.md`。如果改了命令的 frontmatter 字段 → 同步更新 commands 下对应文件
 
 ***
 
