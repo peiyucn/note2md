@@ -35,6 +35,18 @@
 
 ***
 
+## GitHub 操作（gh cli）
+
+* 本机已安装并登录 **gh cli**（账号 `peiyucn`，https 协议，凭据存 keyring），Agent 可直接使用 `gh` 命令操作 GitHub，无需等用户手动操作
+* 本仓库远程：`https://github.com/peiyucn/pyskills.git`（原名 note2md，已改名）
+* 常用操作：
+  * 仓库改名：`gh repo rename <新名> --repo peiyucn/pyskills --yes`
+  * 查看仓库信息：`gh repo view peiyucn/pyskills`
+  * 创建仓库：`gh repo create <名称> --public --source . --remote origin --push`
+* 改名后需同步更新本地 remote：`git remote set-url origin https://github.com/peiyucn/<新名>.git`
+
+***
+
 ## 项目结构
 
 仓库根即**市场（marketplace）**，插件放在 `plugins/` 下：
