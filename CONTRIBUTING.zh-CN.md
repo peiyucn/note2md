@@ -1,6 +1,6 @@
-# 参与贡献 pyskills
+# 参与贡献 peiyucn-skills
 
-简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/pyskills)
+简体中文 | [English](CONTRIBUTING.md) | [GitHub](https://github.com/peiyucn/peiyucn-skills)
 
 ## 分支策略
 
@@ -17,8 +17,8 @@
 ## 项目结构
 
 ```
-pyskills/                              # 仓库根 = 市场
-├── .claude-plugin/marketplace.json    # 市场货架清单（name: pyskills）
+peiyucn-skills/                              # 仓库根 = 市场
+├── .claude-plugin/marketplace.json    # 市场货架清单（name: peiyucn-skills）
 ├── plugins/note2md/                   # 市场提供的插件
 │   ├── .claude-plugin/plugin.json     # 插件元信息
 │   ├── commands/                      # 斜杠命令薄壳

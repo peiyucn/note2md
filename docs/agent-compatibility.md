@@ -1,6 +1,6 @@
 # 三平台 Agent 插件兼容性说明
 
-> 本文档基于源码级验证（2026-07-31）：openai/codex 与 microsoft/vscode 仓库源码、Anthropic Claude Code 官方文档。记录了 pyskills 市场在 **Claude Code / Codex / VS Code Copilot** 三平台的兼容机制与设计决策。
+> 本文档基于源码级验证（2026-07-31）：openai/codex 与 microsoft/vscode 仓库源码、Anthropic Claude Code 官方文档。记录了 peiyucn-skills 市场在 **Claude Code / Codex / VS Code Copilot** 三平台的兼容机制与设计决策。
 
 ## 结论先行
 
@@ -41,7 +41,7 @@
 | Codex | `MARKETPLACE_MANIFEST_RELATIVE_PATHS` 含 `.claude-plugin/marketplace.json` | ✅ 同一文件 |
 | VS Code / Copilot | 支持 marketplace 列表（settings.json `chat.pluginMarketplaces` 或插件市场配置） | ✅ 同一文件 |
 
-- `marketplace.json` 的 `name` 即**市场名**（本仓库：`pyskills`）；插件条目用 `source` 指向仓库内相对路径（本仓库：`./plugins/note2md`，Codex 有测试覆盖此"字符串本地 source"场景）。
+- `marketplace.json` 的 `name` 即**市场名**（本仓库：`peiyucn-skills`）；插件条目用 `source` 指向仓库内相对路径（本仓库：`./plugins/note2md`，Codex 有测试覆盖此"字符串本地 source"场景）。
 - 多余字段（`category`、`tags` 等）被各平台静默忽略，不会报错。
 
 ### 2. 插件清单识别
@@ -85,9 +85,9 @@
 ### 当前结构
 
 ```
-pyskills/                          — 仓库根 = 市场
+peiyucn-skills/                          — 仓库根 = 市场
 ├── .claude-plugin/
-│   └── marketplace.json           — 市场货架清单（name: pyskills；三平台均识别此路径）
+│   └── marketplace.json           — 市场货架清单（name: peiyucn-skills；三平台均识别此路径）
 ├── plugins/note2md/               — 市场下的插件
 │   ├── commands/                  — 8 个命令薄壳（三平台唯一命令来源）
 │   ├── .claude-plugin/
@@ -98,7 +98,7 @@ pyskills/                          — 仓库根 = 市场
 │       └── tools/                 — OneNote 导出/转换脚本
 ```
 
-- **市场名 ≠ 插件名**：市场叫 `pyskills`，插件叫 `note2md`（命令命名空间 `/note2md:xxx`）。这与 Anthropic 官方市场的结构一致。
+- **市场名 ≠ 插件名**：市场叫 `peiyucn-skills`，插件叫 `note2md`（命令命名空间 `/note2md:xxx`）。这与 Anthropic 官方市场的结构一致。
 - **`skills/*/SKILL.md` 目录名即技能名**（三平台约定）：本仓库为 `skills/note2md/SKILL.md`。
 - **薄壳原则**：`commands/*.md` 只含 frontmatter + 一句委托，逻辑全部在 `SKILL.md`。
 

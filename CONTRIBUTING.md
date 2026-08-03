@@ -1,6 +1,6 @@
-# Contributing to pyskills
+# Contributing to peiyucn-skills
 
-[简体中文](CONTRIBUTING.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/pyskills)
+[简体中文](CONTRIBUTING.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/peiyucn-skills)
 
 ## Branch Strategy
 
@@ -13,8 +13,8 @@ Workflow: `dev` → feature branch → PR → `dev` → (when ready) → `master
 ## Project Structure
 
 ```
-pyskills/                              # Repo root = marketplace
-├── .claude-plugin/marketplace.json    # Marketplace registry (name: pyskills)
+peiyucn-skills/                              # Repo root = marketplace
+├── .claude-plugin/marketplace.json    # Marketplace registry (name: peiyucn-skills)
 ├── plugins/note2md/                   # Plugin shipped by this marketplace
 │   ├── .claude-plugin/plugin.json     # Plugin metadata
 │   ├── commands/                      # Slash-command stubs (thin shells)

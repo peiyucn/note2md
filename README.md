@@ -1,16 +1,16 @@
-﻿# pyskills — Agent Skills Marketplace
+﻿# peiyucn-skills — Agent Skills Marketplace
 
-[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/pyskills)
+[简体中文](README.zh-CN.md) | English | [GitHub](https://github.com/peiyucn/peiyucn-skills)
 
 > Agent-native skills, installable across Copilot, Claude Code, and Codex. This repo is a **marketplace** — add it once, then install any plugin it ships.
 
 ## Install the Marketplace
 
-**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/pyskills`, then install the plugins you want.
+**VS Code Copilot** — Add marketplace `https://github.com/peiyucn/peiyucn-skills`, then install the plugins you want.
 
-**Claude Code** — `/marketplace add https://github.com/peiyucn/pyskills` then `/plugin install note2md`.
+**Claude Code** — `/marketplace add https://github.com/peiyucn/peiyucn-skills` then `/plugin install note2md`.
 
-**Codex CLI** — `codex plugin install https://github.com/peiyucn/pyskills` (installs all plugins in the marketplace).
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/peiyucn-skills` (installs all plugins in the marketplace).
 
 ## Plugins
 

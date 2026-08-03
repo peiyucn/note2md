@@ -1,4 +1,4 @@
-# 项目指令 — pyskills
+# 项目指令 — peiyucn-skills
 
 ## 语言
 
@@ -38,10 +38,10 @@
 ## GitHub 操作（gh cli）
 
 * 本机已安装并登录 **gh cli**（账号 `peiyucn`，https 协议，凭据存 keyring），Agent 可直接使用 `gh` 命令操作 GitHub，无需等用户手动操作
-* 本仓库远程：`https://github.com/peiyucn/pyskills.git`（原名 note2md，已改名）
+* 本仓库远程：`https://github.com/peiyucn/peiyucn-skills.git`（原名 pyskills，再往前是 note2md，已两次改名）
 * 常用操作：
-  * 仓库改名：`gh repo rename <新名> --repo peiyucn/pyskills --yes`
-  * 查看仓库信息：`gh repo view peiyucn/pyskills`
+  * 仓库改名：`gh repo rename <新名> --repo peiyucn/peiyucn-skills --yes`
+  * 查看仓库信息：`gh repo view peiyucn/peiyucn-skills`
   * 创建仓库：`gh repo create <名称> --public --source . --remote origin --push`
 * 改名后需同步更新本地 remote：`git remote set-url origin https://github.com/peiyucn/<新名>.git`
 
@@ -52,9 +52,9 @@
 仓库根即**市场（marketplace）**，插件放在 `plugins/` 下：
 
 ```
-pyskills/                          — 仓库根 = 市场
+peiyucn-skills/                          — 仓库根 = 市场
 ├── .claude-plugin/
-│   └── marketplace.json           — 市场货架清单（name: pyskills；三平台均识别此路径）
+│   └── marketplace.json           — 市场货架清单（name: peiyucn-skills；三平台均识别此路径）
 ├── docs/
 │   └── agent-compatibility.md     — 三平台兼容性分析与决策记录（为什么用 .claude-plugin 统一兼容）
 ├── plugins/note2md/               — 市场下的插件（插件名保持 note2md，命令命名空间 /note2md:xxx）
@@ -76,7 +76,7 @@ pyskills/                          — 仓库根 = 市场
 
 | 文件 | 作用 |
 |------|------|
-| `.claude-plugin/marketplace.json` | 市场货架清单。`name` 即市场名（pyskills），插件条目声明 `source: ./plugins/note2md`；多余字段被各平台静默忽略 |
+| `.claude-plugin/marketplace.json` | 市场货架清单。`name` 即市场名（peiyucn-skills），插件条目声明 `source: ./plugins/note2md`；多余字段被各平台静默忽略 |
 | `docs/agent-compatibility.md` | 三平台兼容性分析与决策记录（市场/插件安装/命令注册机制） |
 | `plugins/note2md/skills/note2md/SKILL.md` | **核心**：所有 8 个命令的完整交互流程。是唯一需要维护逻辑的地方 |
 | `plugins/note2md/SKILL-CN.md` | SKILL.md 的中文同步翻译，仅供作者对照。**修改 SKILL.md 时必须同步更新** |

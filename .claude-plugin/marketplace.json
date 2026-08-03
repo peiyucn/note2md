@@ -1,12 +1,12 @@
 {
   "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
-  "name": "pyskills",
+  "name": "peiyucn-skills",
   "description": "Agent-native skills marketplace. Currently ships note2md — Markdown note management with Notebook→Section→Page hierarchy, slash commands, OneNote import, and smart templates. Works across Copilot, Claude Code, and Codex.",
   "owner": {
     "name": "peiyucn"
   },
-  "homepage": "https://github.com/peiyucn/pyskills",
-  "repository": "https://github.com/peiyucn/pyskills",
+  "homepage": "https://github.com/peiyucn/peiyucn-skills",
+  "repository": "https://github.com/peiyucn/peiyucn-skills",
   "plugins": [
     {
       "name": "note2md",

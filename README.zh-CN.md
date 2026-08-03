@@ -1,16 +1,16 @@
-﻿# pyskills — Agent 技能市场
+﻿# peiyucn-skills — Agent 技能市场
 
-简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/pyskills)
+简体中文 | [English](README.md) | [GitHub](https://github.com/peiyucn/peiyucn-skills)
 
 > Agent 原生技能，可在 Copilot、Claude Code、Codex 上通用安装。本仓库是一个**市场** — 添加一次，即可安装它提供的任意插件。
 
 ## 安装市场
 
-**VS Code Copilot** — 添加市场 `https://github.com/peiyucn/pyskills`，然后安装你需要的插件。
+**VS Code Copilot** — 添加市场 `https://github.com/peiyucn/peiyucn-skills`，然后安装你需要的插件。
 
-**Claude Code** — 先 `/marketplace add https://github.com/peiyucn/pyskills`，再 `/plugin install note2md`。
+**Claude Code** — 先 `/marketplace add https://github.com/peiyucn/peiyucn-skills`，再 `/plugin install note2md`。
 
-**Codex CLI** — `codex plugin install https://github.com/peiyucn/pyskills`（安装市场内的全部插件）。
+**Codex CLI** — `codex plugin install https://github.com/peiyucn/peiyucn-skills`（安装市场内的全部插件）。
 
 ## 插件
 
