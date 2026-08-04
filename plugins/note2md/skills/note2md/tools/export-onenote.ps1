@@ -1,4 +1,4 @@
-<#
+﻿<#
 .SYNOPSIS
   从 OneNote 桌面版导出所有笔记本为 XML 文件
 .DESCRIPTION
