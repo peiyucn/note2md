@@ -185,17 +185,9 @@ Setup complete. The resolved `{notes_root}` is used for all subsequent operation
 
 Template-first; "blank page" always available as the last option.
 
+**Fast path**: `newpage` with no argument → skip template selection, create a blank page directly. User only needs to pick destination and title.
 
-
-Fast path
-
-: `newpage` with no argument → skip template selection, create a blank page directly. User only needs to pick destination and title.
-
-
-
-With argument
-
-: `newpage daily` → use daily template; `newpage meeting` → use meeting template, etc.
+**With argument**: `newpage daily` → use daily template; `newpage meeting` → use meeting template, etc.
 
 ### Step 1 — Discover Templates
 
@@ -282,7 +274,7 @@ Options:
 
 | Scope | Action |
 |-------|--------|
-| Notebook | List all notebooks ((excluding `_archive/`(), ask which one        |
+| Notebook | List all notebooks (excluding `_archive/`), ask which one |
 | Section | List notebooks → ask which one → list its sections → ask which one |
 | Page | List notebooks → section → ask which page |
 
@@ -356,7 +348,7 @@ Use your judgment — if it walks like a secret, flag it.
    * Report the file path and line number
    * Show the matching category (NOT the actual sensitive value)
    * Example: `⚠️ notes/Work/Projects/credentials.md:12 — Possible password`
-5.   Never output the actual sensitive value.   Use `[REDACTED]` if context is needed.
+5. Never output the actual sensitive value. Use `[REDACTED]` if context is needed.
 6. Summary: "Found N potential issues across M files."
 7. Remind: "You can move sensitive files to \_archive/ or delete them. Use archive to clean up."
 
@@ -393,9 +385,7 @@ Options:
 
 ### Creating User Templates
 
-
-
-`newtemplate` — Extract template from a section:
+**`newtemplate` — Extract template from a section:**
 
 
 
@@ -420,9 +410,7 @@ Options:
 
 
 
-Manual:
-
- Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `newpage`.
+**Manual**: Drop `.md` files into `{notes_root}/.templates/`. Auto-discovered by `newpage`.
 
 ***
 
