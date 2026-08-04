@@ -60,7 +60,9 @@ Markdown 笔记，按笔记本→分区→页面三层结构组织，通过斜�
 
 #### OneNote 导入
 
-使用 `/note2md init` 导入你现有的 OneNote 笔记本。Agent 会引导你完成导出（需要 Windows + OneNote 桌面版）和 Markdown 转换。结果：`notes/` 完全镜像你原始的 笔记本 → 分区 → 页面 结构。不会过滤任何内容。
+使用 `/note2md init` 导入你现有的 OneNote 笔记本。Agent 会引导你完成导出（需要 Windows + OneNote 桌面版）和 Markdown 转换。结果：`notes/` 镜像你原始的 笔记本 → 分区 → 页面 结构，文本、表格、列表、标题、待办会转换为 Markdown。
+
+> **已知限制：** 图片、文件附件、超链接、墨迹/绘图、公式、音频、视频**暂不提取**（完整清单和路线图见 [docs/onenote-loss-matrix.md](docs/onenote-loss-matrix.md)）。仅保证文本类内容。
 
 ## License
 
