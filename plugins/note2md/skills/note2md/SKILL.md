@@ -64,7 +64,8 @@ Templates?
   newtemplate extracts a template from any section with similar pages.
 
 OneNote?
-  init handles the full import. Windows + OneNote desktop required for auto-export.
+  init imports text content (tables, lists, headings, to-dos). Images, attachments, links, ink, and media are not extracted yet.
+  Windows + OneNote desktop required for auto-export.
 
 Security?
   securecheck checks your notes for passwords, ID numbers, bank cards, and API tokens.

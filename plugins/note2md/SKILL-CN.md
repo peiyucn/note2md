@@ -62,7 +62,8 @@ note: 本文是 skills/note2md/SKILL.md 的中文同步翻译，仅供作者对�
   newtemplate 可从分区中的同类笔记中提取模板。
 
 OneNote？
-  init 处理完整导入。需要 Windows + OneNote 桌面版。
+  init 导入文本类内容（表格、列表、标题、待办）。图片、附件、链接、墨迹、媒体暂不提取。
+  自动导出需要 Windows + OneNote 桌面版。
 
 安全？
   securecheck 检查笔记中的密码、身份证号、银行卡号和 API 令牌。
