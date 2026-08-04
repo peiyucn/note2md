@@ -27,11 +27,14 @@
   * ❌ 先别交 — 还在讨论/探索/收集需求，方向未定
   * ❌ 先别交 — 中途打断、单轮改动不完整、留了 TODO 没处理
 * **分支同步**：`push` 到 `dev` 后**必须**同步 `master`（`git push origin dev:master`）。Copilot Chat 市场安装拉的是 `master`，不同步会导致用户安装到旧版本
-* **版本标签**：每个里程碑（如首个可用版本、大功能批次完成）**必须**打 tag。同步 `plugin.json` 中的 `version` 字段（市场 `marketplace.json` 无 version 字段），然后：
+* **版本号与 push 强绑定**：**凡是 `push`，`plugin.json` 的 `version` 必须更新**。市场按版本号识别更新，只改代码不改版本号会导致用户装到旧版缓存。例外：**未 push 的本地测试**可先不改版本号，测试通过、准备发布时才 bump + push
+* **版本标签**：每个 push 的版本**必须**打 tag。同步 `plugin.json` 中的 `version` 字段（市场 `marketplace.json` 无 version 字段），然后：
   ```bash
   git tag -a v{version} -m "v{version}: {简要说明}"
   git push origin v{version}
   ```
+  * 版本规则：`fix` → patch（0.2.0 → 0.2.1）；`feat` → minor（0.2.0 → 0.3.0）；破坏性变更 → major
+  * 流程：bump 版本号 → commit → push dev → push dev:master → 打 tag → push tag，**一个版本一个 commit，版本号与代码同批推送**
 
 ***
 
