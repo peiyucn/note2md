@@ -330,46 +330,33 @@ def convert_all(xml_dir: Path, notes_dir: Path):
         sys.exit(1)
 
     total = 0
-    for nb_dir in sorted(xml_dir.iterdir()):
-        if not nb_dir.is_dir():
-            continue
-        nb_name = nb_dir.name
+    for xml_file in sorted(xml_dir.rglob("*.xml")):
+        # Preserve the full relative hierarchy: Notebook/SectionGroup*/Section/page.xml
+        rel = xml_file.relative_to(xml_dir)
+        target_dir = notes_dir.joinpath(*rel.parts[:-1])
+        target_dir.mkdir(parents=True, exist_ok=True)
 
-        for sec_dir in sorted(nb_dir.iterdir()):
-            if not sec_dir.is_dir():
-                continue
-            sec_name = sec_dir.name
+        try:
+            fm, body = convert_page_xml(xml_file)
 
-            xml_files = sorted(sec_dir.glob("*.xml"))
-            if not xml_files:
-                continue
+            # Detect type
+            fm["type"] = _detect_type(fm["title"], body)
 
-            # Create target directory
-            target_dir = notes_dir / nb_name / sec_name
-            target_dir.mkdir(parents=True, exist_ok=True)
+            # Build output
+            frontmatter_yaml = _format_frontmatter(fm)
+            md_path = target_dir / f"{_safe_name(fm['title'])}.md"
 
-            for xml_file in xml_files:
-                try:
-                    fm, body = convert_page_xml(xml_file)
+            # Avoid overwrite
+            counter = 2
+            while md_path.exists():
+                md_path = target_dir / f"{_safe_name(fm['title'])}({counter}).md"
+                counter += 1
 
-                    # Detect type
-                    fm["type"] = _detect_type(fm["title"], body)
+            md_path.write_text(frontmatter_yaml + "\n" + body, encoding="utf-8")
+            total += 1
 
-                    # Build output
-                    frontmatter_yaml = _format_frontmatter(fm)
-                    md_path = target_dir / f"{_safe_name(fm['title'])}.md"
-
-                    # Avoid overwrite
-                    counter = 2
-                    while md_path.exists():
-                        md_path = target_dir / f"{_safe_name(fm['title'])}({counter}).md"
-                        counter += 1
-
-                    md_path.write_text(frontmatter_yaml + "\n" + body, encoding="utf-8")
-                    total += 1
-
-                except Exception as e:
-                    print(f"  ✗ Failed: {xml_file.name} — {e}")
+        except Exception as e:
+            print(f"  ✗ Failed: {xml_file.name} — {e}")
 
     print(f"\n✅ Converted {total} pages → {notes_dir.resolve()}")
 

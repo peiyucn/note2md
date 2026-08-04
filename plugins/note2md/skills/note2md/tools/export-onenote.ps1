@@ -33,11 +33,20 @@ $totalSections = 0
 $skipped = 0
 $failed = 0
 
-foreach ($notebook in $notebooks) {
-    $nbName = $notebook.GetAttribute("name")
-    Write-Host "=== Notebook: $nbName ===" -ForegroundColor Cyan
-    
-    $sections = $notebook.SelectNodes("one:Section", $ns)
+function Export-SectionTree($container, $basePath) {
+    # 递归处理分区组（SectionGroup），保留 Notebook/SectionGroup*/Section 层级
+    $groups = $container.SelectNodes("one:SectionGroup", $ns)
+    foreach ($group in $groups) {
+        if ($group.GetAttribute("isRecycleBin") -eq "true" -or
+            $group.GetAttribute("isInRecycleBin") -eq "true") {
+            Write-Host "  Skip group: $($group.GetAttribute('name')) (recycle bin)" -ForegroundColor Gray
+            continue
+        }
+        $groupNameSafe = $group.GetAttribute("name") -replace '[\\/:*?"<>|]', '_'
+        Export-SectionTree $group (Join-Path $basePath $groupNameSafe)
+    }
+
+    $sections = $container.SelectNodes("one:Section", $ns)
     foreach ($section in $sections) {
         $secName = $section.GetAttribute("name")
         
@@ -50,14 +59,14 @@ foreach ($notebook in $notebooks) {
         }
         
         $secNameSafe = $secName -replace '[\\/:*?"<>|]', '_'
-        $secPath = Join-Path $baseDir $nbName | Join-Path -ChildPath $secNameSafe
+        $secPath = Join-Path $basePath $secNameSafe
         
         if (-not (Test-Path $secPath)) {
             New-Item -ItemType Directory -Path $secPath -Force | Out-Null
         }
         
         Write-Host "  Section: $secName" -ForegroundColor Yellow
-        $totalSections++
+        $script:totalSections++
         
         $pages = $section.SelectNodes("one:Page", $ns)
         $pageCount = 0
@@ -69,7 +78,7 @@ foreach ($notebook in $notebooks) {
             
             if (Test-Path $pageFile) {
                 Write-Host "    Skip: $pageName (exists)" -ForegroundColor Gray
-                $skipped++
+                $script:skipped++
                 continue
             }
             
@@ -82,16 +91,22 @@ foreach ($notebook in $notebooks) {
                 [System.IO.File]::WriteAllText($pageFile, $prettyXml, $utf8NoBom)
                 Write-Host "    OK: $pageName" -ForegroundColor Green
                 $pageCount++
-                $totalPages++
+                $script:totalPages++
                 Start-Sleep -Milliseconds 150
             }
             catch {
                 Write-Host "    FAIL: $pageName -- $_" -ForegroundColor Red
-                $failed++
+                $script:failed++
             }
         }
         Write-Host "    ($pageCount pages exported)" -ForegroundColor Gray
     }
+}
+
+foreach ($notebook in $notebooks) {
+    $nbName = $notebook.GetAttribute("name")
+    Write-Host "=== Notebook: $nbName ===" -ForegroundColor Cyan
+    Export-SectionTree $notebook (Join-Path $baseDir $nbName)
 }
 
 Write-Host ""
