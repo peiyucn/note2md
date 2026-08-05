@@ -1,0 +1,64 @@
+{
+  "name": "agent-plugins-updater",
+  "displayName": "Agent Plugins Updater",
+  "description": "Put the hidden 'Update Plugins' command on the Agent Plugins view so you can update agent plugins (like note2md) with one click — no need to uninstall and reinstall.",
+  "version": "0.1.0",
+  "publisher": "peiyucn",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/peiyucn/peiyucn-skills.git"
+  },
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "Chat",
+    "Other"
+  ],
+  "keywords": [
+    "agent-plugins",
+    "plugins",
+    "marketplace",
+    "update",
+    "copilot"
+  ],
+  "files": [
+    "extension.js",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
+  "activationEvents": [],
+  "main": "./extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "agentPluginsUpdater.updateAll",
+        "title": "Update Agent Plugins",
+        "category": "Agent Plugins"
+      },
+      {
+        "command": "agentPluginsUpdater.forceUpdateAll",
+        "title": "Update Agent Plugins (Force)",
+        "category": "Agent Plugins"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "agentPluginsUpdater.updateAll",
+          "when": "view == workbench.views.agentPlugins.installed",
+          "group": "navigation@1"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "agentPluginsUpdater.forceUpdateAll",
+          "when": "view == workbench.views.agentPlugins.installed",
+          "group": "update@1"
+        }
+      ]
+    }
+  }
+}

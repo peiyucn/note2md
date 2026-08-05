@@ -9,6 +9,9 @@ __pycache__/
 *.pyc
 *.pyo
 
+# VS Code extension build output
+*.vsix
+
 # OS
 .DS_Store
 Thumbs.db
