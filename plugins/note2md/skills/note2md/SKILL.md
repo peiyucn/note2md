@@ -65,7 +65,8 @@ Templates?
 
 OneNote?
   init imports text content (tables, lists, headings, to-dos). Images, attachments, links, ink, and media are not extracted yet.
-  Windows + OneNote desktop required for auto-export.
+  No Python or other runtime needed — conversion is done by the agent itself.
+  Auto-export needs Windows + OneNote desktop; on other platforms, point init at any folder of OneNote XML exports.
 
 Security?
   securecheck checks your notes for passwords, ID numbers, bank cards, and API tokens.
@@ -114,19 +115,9 @@ Options:
 
 #### Import Path
 
-**Prerequisite — Python check:**
+**No prerequisites.** No Python, no Node, no runtime — conversion is done by you (the agent) natively. The only optional helper is a bundled PowerShell export script, used solely for Windows users with OneNote desktop.
 
-Before import, verify Python is available by running `python --version` or `python3 --version`. If neither works:
-
-```
-Question: "OneNote import requires Python 3. To install it, run: winget install Python.Python.3.12
-Or download from https://python.org. After installing, re-run init. Ready to continue?"
-Options:
-  - "I'll install Python and come back"
-  - "Skip import — start fresh instead"
-```
-
-If user skips, fall back to the Fresh Start path. Otherwise, wait for them to install and retry.
+Proceed to the [Import Pipeline](#import-pipeline), which handles platform detection and export options.
 
 **Start import:**
 
@@ -419,7 +410,23 @@ Options:
 
 1:1 mapping — OneNote structure preserved as-is. Only the Recycle Bin is skipped (system folder, not user content).
 
-### Phase 1 — Export
+**No runtime dependencies.** No Python, no Node — conversion is done by you (the agent) natively. The only optional helper is `export-onenote.ps1`, which is Windows-only by nature (OneNote COM API).
+
+### Phase 0 — Platform Detection
+
+Detect the user's OS before offering any export option:
+
+| Platform | How to detect |
+|----------|---------------|
+| Windows | `$env:OS` / `ver` in PowerShell, or check for a `C:\` drive |
+| macOS | `uname -s` → `Darwin` |
+| Linux | `uname -s` → `Linux` |
+
+If you cannot detect reliably, just ask the user.
+
+### Phase 1 — Obtain XML Export
+
+**Windows + OneNote desktop (2016+):** offer auto-export.
 
 ```
 Question: "How to export your OneNote data?"
@@ -438,9 +445,89 @@ Options: "Default (./onenote_export)" | "Custom path"
 Run: `powershell -File "<skill_dir>/tools/export-onenote.ps1" -OutputDir "<path>"`
 Requires Windows + Office 2016+, COM API.
 
-### Phase 2 — Convert
+**Verify the export result (mandatory) — never proceed on an unverified export:**
 
-Run `<skill_dir>/tools/convert-xml2md.py` → converts XML to `{notes_root}/` preserving Notebook→Section→Page. `onenote_export/` is temporary — remind user to delete it.
+1. The script completed without errors (check the exit code and error output).
+2. The output directory contains **at least one** `*.xml` file. Zero XML files means the export failed — e.g. OneNote desktop not installed, COM not registered, or all notebooks empty.
+3. Scan the script output for `FAIL:` lines; report every failed page to the user by name.
+4. Structure sanity check: pages sit under Notebook/Section folders as `{PageName}.xml`.
+
+If the export failed or produced no XML: tell the user what went wrong and fall back to the manual path below. Never continue to conversion with an empty or broken export.
+
+**macOS / Linux (or no OneNote desktop):** the COM API is Windows-only, so `export-onenote.ps1` **cannot run here** — auto-export is not available. Tell the user this plainly: *they must obtain the XML exports themselves* (e.g. run the export on a Windows machine with OneNote desktop, or use any tool that produces OneNote page XML). You only handle the conversion. Then offer:
+
+```
+Question: "Auto-export isn't available on this system (needs Windows + OneNote desktop). Please export your notebooks to XML yourself, or choose another option:"
+Options:
+  - "I have XML exports (e.g. exported elsewhere) — point me to the path"
+  - "Skip import — start fresh instead"
+```
+
+If the user points to a path, verify it actually contains XML files before continuing (see the checks above).
+
+XML exports are plain files — they can come from any machine or tool. What matters: each page is a `.xml` file containing OneNote page XML (namespace `http://schemas.microsoft.com/office/onenote/2013/onenote`), typically named `{PageName}.xml` inside a Notebook/Section folder structure. Accept any path containing such files.
+
+### Phase 2 — Convert (agent-native, no scripts)
+
+You do the conversion yourself — this is the core of the import and needs no external tools:
+
+1. Walk the export directory recursively for `*.xml` files.
+2. Preserve the relative folder structure: Notebook → SectionGroup → Section.
+3. Convert each page per the [XML → Markdown Conversion Rules](#xml--markdown-conversion-rules).
+4. Write `{title}.md` (YAML frontmatter + body) into `{notes_root}/`, mirroring the structure.
+5. Avoid overwrites: if a `.md` already exists, append `(2)`, `(3)`, …
+6. Report: "Converted N pages → {notes_root}."
+
+`onenote_export/` is temporary — remind the user to delete it.
+
+### Phase 3 — Verify (mandatory)
+
+Conversion is format mapping, not creative writing. Determinism comes from a hard verification pass — never skip it:
+
+1. **Count check**: number of `*.xml` files found == number of `.md` files written. A mismatch means something was dropped.
+2. **Spot check**: open 2–3 random source XML files and their `.md` outputs; verify title, headings, tables, lists, and to-dos match the rules exactly.
+3. **Failure report**: any page that failed to convert → report its path and reason to the user. Never silently drop.
+4. **Fix and re-verify**: correct any deviation found, then re-run checks 1–2.
+5. **Large imports**: process in batches (e.g. 50 pages at a time) to avoid attention decay; verify each batch before moving on.
+
+Then report: "Converted N pages → {notes_root}." (If any failed, add: "M pages failed — see list above.")
+
+### XML → Markdown Conversion Rules
+
+Apply page by page, mechanically. This is format conversion, not creative writing — follow the tables exactly. Do not add, omit, rewrite, or "improve" content. If something does not match any rule, note it and ask — do not guess.
+
+**Frontmatter**
+
+| Field | Source |
+|-------|--------|
+| `title` | `<one:Page name="...">` attribute; fallback: text of first `<one:Title/one:OE>`; last resort: filename |
+| `date` | `dateTime` or `lastModifiedTime` attribute, take `YYYY-MM-DD`; fallback: today |
+| `type` | Heuristic from title/content: `meeting` (例会/会议/meeting/review), `daily` (日记/daily/journal), `task` (待办/todo/action item), else `note` |
+| `tags` | `[]` |
+
+**Body — element mapping**
+
+| OneNote element | Markdown output |
+|-----------------|-----------------|
+| Text — collect all `<one:T>` descendants | plain text; strip embedded HTML `<span>` tags, unescape entities |
+| `<one:OE bold="1">` / `italic="1"` | `**text**` / `*text*` (both → `***text***`) |
+| Heading (`quickStyleIndex` or `style` containing "heading") | `#` × min(level, 6) |
+| To-do — `<one:Tag index="0">` | `- [ ] ` unchecked |
+| To-do — `<one:Tag index="1">` | `- [x] ` checked |
+| List — `<one:List>` present, or `<one:Tag>` with other index | `- ` bullet; nested `<one:OE>` children indent 2 spaces per level |
+| `<one:Table>` → `<one:Row>` → `<one:Cell>` | Markdown table; line breaks inside a cell → `<br>`; skip fully empty rows |
+| `<one:Image>` | skip (not extracted yet) |
+
+Structure notes:
+
+- `<one:OEChildren>` is a wrapper — recurse into it, emit nothing.
+- An `<one:OE>` that only contains `Table`/`OEChildren` emits nothing itself.
+- Skip Recycle Bin content (`OneNote_RecycleBin`, `isRecycleBin="true"`).
+- Body starts with `# {title}`.
+- Filenames: replace `\/:*?"<>|` with `_`.
+- Collapse 3+ blank lines to 2; strip trailing whitespace.
+
+**Loss matrix:** images, attachments, hyperlinks, ink, math, audio, and video are intentionally not converted. Full breakdown: `docs/onenote-loss-matrix.md` in the plugin repo.
 
 ***
 

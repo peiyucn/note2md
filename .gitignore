@@ -4,11 +4,6 @@ onenote_export/
 # User notes (not part of the plugin)
 notes/
 
-# Python
-__pycache__/
-*.pyc
-*.pyo
-
 # VS Code extension build output
 *.vsix
 

@@ -2,7 +2,7 @@
 
 > 记录 note2md 从 OneNote 迁移到 Markdown 时的**信息覆盖范围**与**已知丢失项**。
 > 目的：迁移决策有据可查；后续实现按优先级逐项补齐，不靠记忆。
-> 对应实现：`plugins/note2md/skills/note2md/tools/convert-xml2md.py`（转换）与 `export-onenote.ps1`（导出）。
+> 对应实现：`plugins/note2md/skills/note2md/SKILL.md` 的 Import Pipeline（Agent 原生转换，零运行时依赖）与 `tools/export-onenote.ps1`（可选导出，Windows）。
 
 ## 一、当前覆盖范围（保住了什么）
 

@@ -63,7 +63,8 @@ note: 本文是 skills/note2md/SKILL.md 的中文同步翻译，仅供作者对�
 
 OneNote？
   init 导入文本类内容（表格、列表、标题、待办）。图片、附件、链接、墨迹、媒体暂不提取。
-  自动导出需要 Windows + OneNote 桌面版。
+  无需 Python 等任何运行时 — 转换由 Agent 直接完成。
+  自动导出仅限 Windows + OneNote 桌面版；其他平台提供 OneNote XML 导出文件即可。
 
 安全？
   securecheck 检查笔记中的密码、身份证号、银行卡号和 API 令牌。
@@ -112,19 +113,9 @@ OneNote？
 
 #### 导入路径
 
-**前置条件 — Python 环境检测：**
+**无任何前置依赖。** 不需要 Python、Node 或任何运行时 — 转换由 Agent 原生完成。唯一的可选辅助工具是内置的 PowerShell 导出脚本，仅用于 Windows + OneNote 桌面版用户。
 
-导入前先运行 `python --version` 或 `python3 --version` 检查 Python 是否可用。如果都不行：
-
-```
-问题: "OneNote 导入需要 Python 3。安装方法：winget install Python.Python.3.12
-或从 https://python.org 下载。安装后重新运行 init。是否继续？"
-选项:
-  - "我去安装 Python，稍后回来"
-  - "跳过导入 — 改为从头开始"
-```
-
-如果用户跳过，回退到从头开始路径。否则等用户装好后重试。
+进入[导入流程](#导入流程)，由它处理平台检测与导出选项。
 
 **开始导入：**
 
@@ -406,7 +397,23 @@ tags: []
 
 1:1 映射 — OneNote 结构原样保留。仅跳过回收站（系统目录，非用户内容）。
 
-### 阶段 1 — 导出
+**无运行时依赖。** 不需要 Python、Node — 转换由 Agent 原生完成。唯一的可选辅助工具是 `export-onenote.ps1`，它本质上是 Windows 专属（OneNote COM API）。
+
+### 阶段 0 — 平台检测
+
+在提供任何导出选项之前，先判断用户的操作系统：
+
+| 平台 | 检测方法 |
+|------|----------|
+| Windows | PowerShell 中 `$env:OS` / `ver`，或检查是否存在 `C:\` 盘 |
+| macOS | `uname -s` → `Darwin` |
+| Linux | `uname -s` → `Linux` |
+
+如果无法可靠检测，直接询问用户。
+
+### 阶段 1 — 获取 XML 导出
+
+**Windows + OneNote 桌面版（2016+）：** 提供自动导出。
 
 ```
 问题: "OneNote 数据怎么导出？"
@@ -425,9 +432,89 @@ tags: []
 运行：`powershell -File "<skill_dir>/tools/export-onenote.ps1" -OutputDir "<路径>"`
 需 Windows + Office 2016+，COM API。
 
-### 阶段 2 — 转换
+**校验导出结果（强制）— 未经验证的导出不得继续：**
 
-运行 `<skill_dir>/tools/convert-xml2md.py` → 将 XML 转为 `{notes_root}/`，保持笔记本→分区→页面结构。`onenote_export/` 为临时目录 — 提醒用户删除。
+1. 脚本无错误完成（检查退出码和错误输出）。
+2. 输出目录中**至少有一个** `*.xml` 文件。0 个 XML 说明导出失败 — 例如未安装 OneNote 桌面版、COM 未注册、或所有笔记本为空。
+3. 扫描脚本输出中的 `FAIL:` 行；逐个向用户报告失败的页面。
+4. 结构合理性检查：页面以 `{页面名}.xml` 位于 笔记本/分区 目录下。
+
+若导出失败或没有产出 XML：告知用户具体原因，并回退到下方的手动路径。**绝不**带着空导出或损坏的导出进入转换。
+
+**macOS / Linux（或没有 OneNote 桌面版）：** COM API 仅限 Windows，`export-onenote.ps1` **无法在此环境运行** — 自动导出不可用。直接明确告知用户：*他们必须自己获取 XML 导出*（例如在装有 OneNote 桌面版的 Windows 机器上导出，或用任何能产出 OneNote 页面 XML 的工具）。你只负责转换。然后提供：
+
+```
+问题: "当前系统无法自动导出（需要 Windows + OneNote 桌面版）。请自行将笔记本导出为 XML，或选择其他方式："
+选项:
+  - "我有 XML 导出文件（如在其他机器上导出的）— 指定路径"
+  - "跳过导入 — 改为从头开始"
+```
+
+用户指定路径后，先验证其中确实包含 XML 文件再继续（见上方检查）。
+
+XML 导出是纯文本文件 — 可以来自任何机器或工具。关键要求：每个页面是一个 `.xml` 文件，内容是 OneNote 页面 XML（命名空间 `http://schemas.microsoft.com/office/onenote/2013/onenote`），通常命名为 `{页面名}.xml`，位于 笔记本/分区 目录结构中。包含此类文件的任意路径均可接受。
+
+### 阶段 2 — 转换（Agent 原生，无脚本）
+
+转换由你自己完成 — 这是导入的核心，不需要任何外部工具：
+
+1. 递归遍历导出目录中的 `*.xml` 文件。
+2. 保留相对目录结构：笔记本 → 分区组 → 分区。
+3. 按[XML → Markdown 转换规则](#xml--markdown-转换规则)转换每个页面。
+4. 将 `{标题}.md`（YAML frontmatter + 正文）写入 `{notes_root}/`，镜像原结构。
+5. 避免覆盖：若 `.md` 已存在，追加 `(2)`、`(3)`…
+6. 报告："已转换 N 个页面 → {notes_root}。"
+
+`onenote_export/` 为临时目录 — 提醒用户删除。
+
+### 阶段 3 — 校验（强制）
+
+转换是格式映射，不是创作。确定性来自硬性校验环节 — 不可跳过：
+
+1. **数量核对**：找到的 `*.xml` 文件数 == 写出的 `.md` 文件数。对不上说明有遗漏。
+2. **抽查**：随机打开 2-3 个源 XML 与其 `.md` 输出，核对标题、标题层级、表格、列表、待办是否完全符合规则。
+3. **失败报告**：任何转换失败的页面 → 向用户报告路径和原因。绝不静默丢弃。
+4. **修正后复检**：发现偏差立即修正，然后重跑检查 1-2。
+5. **大批量分批**：分批处理（如每批 50 页），避免注意力衰减；每批完成后先校验再继续。
+
+然后报告："已转换 N 个页面 → {notes_root}。"（如有失败，补充："M 个页面转换失败 — 见上方列表。"）
+
+### XML → Markdown 转换规则
+
+逐页机械应用。这是格式转换，不是创作 — 严格按表执行。不要添加、省略、改写或"优化"内容。若某元素不匹配任何规则，记录并询问，不要猜测。
+
+**Frontmatter**
+
+| 字段 | 来源 |
+|------|------|
+| `title` | `<one:Page name="...">` 属性；回退：第一个 `<one:Title/one:OE>` 文本；最后回退：文件名 |
+| `date` | `dateTime` 或 `lastModifiedTime` 属性，取 `YYYY-MM-DD`；回退：今天 |
+| `type` | 从标题/内容启发式判断：`meeting`（例会/会议/meeting/review）、`daily`（日记/daily/journal）、`task`（待办/todo/action item），否则 `note` |
+| `tags` | `[]` |
+
+**正文 — 元素映射**
+
+| OneNote 元素 | Markdown 输出 |
+|--------------|---------------|
+| 文本 — 收集所有 `<one:T>` 后代 | 纯文本；剥离内嵌 HTML `<span>` 标签，反转义实体 |
+| `<one:OE bold="1">` / `italic="1"` | `**文本**` / `*文本*`（两者都有 → `***文本***`） |
+| 标题（`quickStyleIndex` 或 `style` 含 "heading"） | `#` × min(级别, 6) |
+| 待办 — `<one:Tag index="0">` | `- [ ] ` 未勾选 |
+| 待办 — `<one:Tag index="1">` | `- [x] ` 已勾选 |
+| 列表 — 存在 `<one:List>`，或 `<one:Tag>` 为其他 index | `- ` 项目符号；嵌套 `<one:OE>` 子项每级缩进 2 空格 |
+| `<one:Table>` → `<one:Row>` → `<one:Cell>` | Markdown 表格；单元格内换行 → `<br>`；跳过全空行 |
+| `<one:Image>` | 跳过（暂不提取） |
+
+结构要点：
+
+- `<one:OEChildren>` 是容器 — 递归进入，自身不输出。
+- 只包含 `Table`/`OEChildren` 的 `<one:OE>` 自身不输出。
+- 跳过回收站内容（`OneNote_RecycleBin`、`isRecycleBin="true"`）。
+- 正文以 `# {标题}` 开头。
+- 文件名：将 `\/:*?"<>|` 替换为 `_`。
+- 3 个以上空行合并为 2 个；去除行尾空白。
+
+**丢失矩阵：** 图片、附件、超链接、墨迹、公式、音频、视频有意不转换。完整清单：插件仓库的 `docs/onenote-loss-matrix.md`。
 
 ***
 

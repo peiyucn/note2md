@@ -71,8 +71,7 @@ peiyucn-skills/                          — 仓库根 = 市场
 │       │   ├── meeting.md
 │       │   └── quick-note.md
 │       └── tools/
-│           ├── export-onenote.ps1 — OneNote 自动导出（Windows + COM API）
-│           └── convert-xml2md.py  — OneNote XML → Markdown 转换
+│           └── export-onenote.ps1 — OneNote 自动导出（Windows + COM API，可选）
 ```
 
 ### 关键文件
