@@ -60,9 +60,14 @@ Markdown 笔记，按笔记本→分区→页面三层结构组织，通过斜�
 
 #### OneNote 导入
 
-使用 `/note2md init` 导入你现有的 OneNote 笔记本。**无需 Python 或任何运行时** — Agent 原生将 XML 转换为 Markdown，并带强制校验环节（数量核对 + 抽查）。Windows + OneNote 桌面版可用可选的 PowerShell 脚本自动导出；其他平台把任意 OneNote XML 导出目录告诉 `init` 即可。结果：`notes/` 镜像你原始的 笔记本 → 分区 → 页面 结构，文本、表格、列表、标题、待办会转换为 Markdown。
+使用 `/note2md init` 导入你现有的 OneNote 笔记本。**无需 Python 或任何运行时** — Agent 原生将 XML 转换为 Markdown，并带强制校验环节（数量核对 + 抽查）。
 
-所有导入产物（自动导出的 XML、排版副本）都放在笔记根目录**内部**的 `_import/` 临时暂存区 — 绝不落到工作区，导入完成后删除。如果你自行导出 OneNote XML，请把文件放到 `{notes_root}/_import/` 下再运行 `init`，Agent 会从这里拾取。
+- **Windows + OneNote 桌面版：** 可用可选的 PowerShell 脚本自动导出笔记本。
+- **macOS / Linux（或无 OneNote 桌面版）：** 没有自动导出（COM API 仅限 Windows）— 你必须自己导出 XML（例如在装有 OneNote 桌面版的 Windows 机器上导出），再把目录告诉 `init`。
+
+结果：`notes/` 镜像你原始的 笔记本 → 分区 → 页面 结构，文本、表格、列表、标题、待办会转换为 Markdown。
+
+所有导入产物（自动导出的 XML、排版副本）都放在笔记根目录**内部**的 `_import/` 临时暂存区，导入完成后删除。如果你自行导出 OneNote XML，请把文件放到 `{notes_root}/_import/` 下再运行 `init`，Agent 会从这里拾取。
 
 > **已知限制：** 图片、文件附件、超链接、墨迹/绘图、公式、音频、视频**暂不提取**（完整清单和路线图见 [docs/onenote-loss-matrix.md](docs/onenote-loss-matrix.md)）。仅保证文本类内容。
 
