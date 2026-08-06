@@ -4,16 +4,23 @@
 .DESCRIPTION
   使用 OneNote COM API 遍历所有笔记本→分区→页面，导出为 XML。
   自动跳过回收站（OneNote_RecycleBin）。
+  OutputDir 为必填参数 — 由调用方（Agent）显式指定，通常为 {notes_root}/_import/。
 .PARAMETER OutputDir
-  导出目标目录，默认为脚本所在目录下的 ./onenote_export
+  导出目标目录（必填）。建议传入笔记根目录下的 _import/ 临时区，
+  切勿使用相对 cwd 的路径，避免导入产物污染工作区。
 .EXAMPLE
-  .\export-onenote.ps1
-  .\export-onenote.ps1 -OutputDir "D:\my_notes"
+  .\export-onenote.ps1 -OutputDir "D:\notes\_import"
 #>
 
 param(
-    [string]$OutputDir = "$PSScriptRoot\onenote_export"
+    [Parameter(Mandatory = $true)]
+    [string]$OutputDir
 )
+
+if ([string]::IsNullOrWhiteSpace($OutputDir)) {
+    Write-Host "ERROR: -OutputDir is required. Example: export-onenote.ps1 -OutputDir `"<notes_root>\_import`"" -ForegroundColor Red
+    exit 1
+}
 
 $ErrorActionPreference = "Continue"
 $utf8NoBom = New-Object System.Text.UTF8Encoding($false)

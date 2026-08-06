@@ -1,5 +1,5 @@
-# OneNote export temp directory
-onenote_export/
+# OneNote import/export temp directory (created under {notes_root} by the skill)
+_import/
 
 # User notes (not part of the plugin)
 notes/

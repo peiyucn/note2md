@@ -27,7 +27,8 @@ peiyucn-skills/                              # 仓库根 = 市场
 │       ├── SKILL.md                   # Agent 行为 — 所有命令逻辑在此
 │       ├── templates/                 # 内置页面模板
 │       └── tools/
-│           └── export-onenote.ps1     # OneNote COM 导出（Windows；可选）
+│           ├── export-onenote.ps1     # OneNote COM 导出（Windows；可选）
+│           └── format-onenote-xml.ps1 # XML 排版（可选；导入前使用）
 
 > `notes/` 和 `.templates/` 属于用户空间 — 不在此仓库中。
 > `test/` 是手工测试用的临时目录 — 已被 git 忽略。

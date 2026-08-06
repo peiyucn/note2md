@@ -23,7 +23,8 @@ peiyucn-skills/                              # Repo root = marketplace
 │       ├── SKILL.md                   # Agent behavior — all command logic lives here
 │       ├── templates/                 # Built-in page templates
 │       └── tools/
-│           └── export-onenote.ps1     # OneNote COM export (Windows; optional)
+│           ├── export-onenote.ps1     # OneNote COM export (Windows; optional)
+│           └── format-onenote-xml.ps1 # XML pretty-printing (optional; before import)
 
 > `notes/` and `.templates/` are user-space — they do not live in this repo.
 > `test/` is a scratch directory for manual testing — gitignored.

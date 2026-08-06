@@ -14,6 +14,7 @@ You are the interface to the user's note system. All notes use the same **Notebo
 │   │   ├── {page}.md        # Page (an individual note)
 │   │   └── ...
 │   └── ...
+├── _import/                 # Temporary staging for OneNote imports (created on demand)
 ├── _archive/                # Archive — agent never reads this by default
 └── .templates/              # User templates — override plugin defaults
 ```
@@ -21,6 +22,8 @@ You are the interface to the user's note system. All notes use the same **Notebo
 >   No lock-in.   Every notebook is a folder, every section is a subfolder, every page is a `.md` file. You can create, rename, move, or delete anything through your file manager — the agent picks up the changes automatically. Commands are optional convenience.
 
 > `{notes_root}` is set during `init` (default: `./notes/`). All paths below use this variable.
+
+> **Root discipline:** once `{notes_root}` is resolved, every artifact — notebooks, `_archive/`, `.templates/`, and the temporary `_import/` staging area — lives under it. Never write import/export artifacts to the current working directory unless the user explicitly chose it as `{notes_root}`.
 
 ***
 
@@ -121,14 +124,31 @@ Proceed to the [Import Pipeline](#import-pipeline), which handles platform detec
 
 **Start import:**
 
-If `{notes_root}/` already has notebooks (excluding `_archive/`), warn:
+First, check whether `{notes_root}/` already contains anything (excluding `_import/`, `_archive/`, and `.templates/`).
+
+If it is **empty**, proceed straight to the [Import Pipeline](#import-pipeline) — no conflict to resolve.
+
+If it **already has content**, do NOT silently overwrite or clear anything. Ask the user which import mode they want:
 
 ```
-Question: "⚠️ {notes_root}/ already has notes. Import will OVERWRITE them. Continue?"
-Options: "Overwrite and import" | "Cancel"
+Question: "⚠️ {notes_root}/ already has notes. How should I handle the existing content?"
+Options:
+  - "Merge — keep everything, add a (2)/(3)… suffix on any same-name pages" (recommended, non-destructive)
+  - "Clear then import — delete everything under {notes_root}/ first, then import fresh"
+  - "Cancel"
 ```
 
-If cancelled, stop. Otherwise run the [Import Pipeline](#import-pipeline) targeting `{notes_root}`. After import, tell the user: "Import complete. Use `newtemplate` on any section with similar pages to create templates."
+- **Merge** (default): run the Import Pipeline as-is. The existing files stay untouched; the Phase 2 rule "avoid overwrites" (`(2)`, `(3)`, … suffix) applies on top of them.
+- **Clear then import**: before running the pipeline, delete the contents of `{notes_root}/` **except** `_import/`, `_archive/`, and `.templates/` — and confirm once more before deleting:
+
+  ```
+  Question: "This will permanently delete all current notes under {notes_root}/. Continue?"
+  Options: "Yes, clear everything and import" | "No, go back"
+  ```
+
+  Only after the user confirms, delete those folders/files, then run the [Import Pipeline](#import-pipeline).
+
+After import, tell the user: "Import complete. Use `newtemplate` on any section with similar pages to create templates."
 
 #### Fresh Start Path
 
@@ -295,11 +315,11 @@ Options:
   - "Not now"
 ```
 
-If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the working context with only active notebooks.
+If user confirms, re-scan `{notes_root}/` (excluding `_import/` and `_archive/`) to rebuild the working context with only active notebooks.
 
 ### Rules
 
-* Never read `_archive/` during normal operations
+* Never read `_import/` or `_archive/` during normal operations
 * Only search `_archive/` when user says "search archive"
 * Archived items can be restored by moving them back to their original path
 
@@ -307,7 +327,7 @@ If user confirms, re-scan `{notes_root}/` (excluding `_archive/`) to rebuild the
 
 ## `securecheck` — Security Check
 
-Scans `{notes_root}/` (excluding `_archive/`) for sensitive information. Read files directly — you understand context, not just regex.
+Scans `{notes_root}/` (excluding `_import/` and `_archive/`) for sensitive information. Read files directly — you understand context, not just regex.
 
 ### What to Look For
 
@@ -334,7 +354,7 @@ Use your judgment — if it walks like a secret, flag it.
    ```
 
    If custom patterns provided, add them to the scan list.
-3. Search across `{notes_root}/` (skip `_archive/` and `.templates/`)
+3. Search across `{notes_root}/` (skip `_import/`, `_archive/` and `.templates/`)
 4. For each match:
 
    * Report the file path and line number
@@ -410,7 +430,7 @@ Options:
 
 1:1 mapping — OneNote structure preserved as-is. Only the Recycle Bin is skipped (system folder, not user content).
 
-**No runtime dependencies.** No Python, no Node — conversion is done by you (the agent) natively. The only optional helper is `export-onenote.ps1`, which is Windows-only by nature (OneNote COM API).
+**No runtime dependencies.** No Python, no Node — conversion is done by you (the agent) natively. The only optional helpers are bundled PowerShell scripts: `export-onenote.ps1` (Windows-only, OneNote COM API) and `format-onenote-xml.ps1` (pretty-printing, see Phase 1.5).
 
 ### Phase 0 — Platform Detection
 
@@ -439,11 +459,13 @@ If auto-export:
 
 ```
 Question: "Export to which directory?"
-Options: "Default (./onenote_export)" | "Custom path"
+Options: "Default ({notes_root}/_import/)" | "Custom path"
 ```
 
+The default is inside `{notes_root}` (never the current working directory) so import artifacts never pollute the workspace. If the user picks the default, use `{notes_root}/_import/` — create the directory if missing. If they pick custom, use their path as-is.
+
 Run: `powershell -File "<skill_dir>/tools/export-onenote.ps1" -OutputDir "<path>"`
-Requires Windows + Office 2016+, COM API.
+Requires Windows + Office 2016+, COM API. The script refuses to run without an explicit `-OutputDir`.
 
 **Verify the export result (mandatory) — never proceed on an unverified export:**
 
@@ -467,18 +489,40 @@ If the user points to a path, verify it actually contains XML files before conti
 
 XML exports are plain files — they can come from any machine or tool. What matters: each page is a `.xml` file containing OneNote page XML (namespace `http://schemas.microsoft.com/office/onenote/2013/onenote`), typically named `{PageName}.xml` inside a Notebook/Section folder structure. Accept any path containing such files.
 
+### Phase 1.5 — Pretty-print XML for Reliable Reading
+
+OneNote page XML is often a **single very long line** (tens of thousands of characters per file). Agent file-reading tools truncate long lines, so a raw export cannot be read faithfully — content gets silently dropped during conversion.
+
+**Before converting, make sure every `.xml` file is readable in full.** Sample 2–3 files first: if any line exceeds ~2,000 characters, pretty-print the export.
+
+How to pretty-print (choose one):
+
+1. **Bundled helper** (Windows, or anywhere `powershell` is available):
+   `powershell -File "<skill_dir>/tools/format-onenote-xml.ps1" -InputDir "<export_dir>"`
+   - Output goes to `<export_dir>_pretty/` by default.
+   - `-InPlace` rewrites the files in place; `-OutputDir "<path>"` writes elsewhere.
+   - Keep everything under the staging area — never write to the workspace root.
+2. **Agent-native** (no script): read each file, parse it, and write it back indented. The bundled script is the reference behavior; a capable agent can do the same thing directly.
+
+Verification after formatting (mandatory):
+
+1. Re-sample the formatted files — every `<one:OE>` / `<one:T>` line must now be on its own readable line.
+2. Confirm the formatted tree has the same Notebook/Section structure and the same set of `.xml` files as the source (count match).
+
+Point the conversion step at the pretty-printed copy (or keep the same path if `-InPlace`). The `.xml` → `.md` rules below apply unchanged.
+
 ### Phase 2 — Convert (agent-native, no scripts)
 
 You do the conversion yourself — this is the core of the import and needs no external tools:
 
-1. Walk the export directory recursively for `*.xml` files.
+1. Walk the export directory recursively for `*.xml` files. If Phase 1.5 produced a pretty-printed copy, walk **that** copy; otherwise walk the original export.
 2. Preserve the relative folder structure: Notebook → SectionGroup → Section.
 3. Convert each page per the [XML → Markdown Conversion Rules](#xml--markdown-conversion-rules).
 4. Write `{title}.md` (YAML frontmatter + body) into `{notes_root}/`, mirroring the structure.
 5. Avoid overwrites: if a `.md` already exists, append `(2)`, `(3)`, …
 6. Report: "Converted N pages → {notes_root}."
 
-`onenote_export/` is temporary — remind the user to delete it.
+`{notes_root}/_import/` is temporary staging — remind the user to delete it after the import.
 
 ### Phase 3 — Verify (mandatory)
 
@@ -516,6 +560,44 @@ Apply page by page, mechanically. This is format conversion, not creative writin
 | To-do — `<one:Tag index="1">` | `- [x] ` checked |
 | List — `<one:List>` present, or `<one:Tag>` with other index | `- ` bullet; nested `<one:OE>` children indent 2 spaces per level |
 | `<one:Table>` → `<one:Row>` → `<one:Cell>` | Markdown table; line breaks inside a cell → `<br>`; skip fully empty rows |
+
+**To-dos inside table cells** — GFM table cells cannot contain Markdown task lists (`- [ ]` inside a cell is not valid and loses the checkbox). When a to-do `<one:Tag index="0|1">` appears **inside a `<one:Cell>`**, keep the table structure and use a **text marker** instead of a list:
+
+| Cell content | Markdown output |
+|---|---|
+| `<one:Tag index="0">` + text in a cell | `[ ] text` |
+| `<one:Tag index="1">` + text in a cell | `[x] text` |
+| Multiple `<one:OE>` in one cell | Join with `<br>`, prefix each to-do OE with its `[ ]` / `[x]` marker |
+
+Example: a cell containing two OEs — plain text then an unchecked to-do — becomes `plain text<br>[ ] action item`.
+
+**Lists (ordered/unordered) inside table cells** — the same constraint applies to any list inside a cell: `<one:Number>` (ordered), `<one:Bullet>` (unordered), and `<one:Tag>` all cannot render as native Markdown lists inside a cell. Use text markers too:
+
+| Cell content | Markdown output |
+|---|---|
+| Ordered item — `<one:List><one:Number text="1.">` + text | `1. text` (use the `text` attribute, fallback to auto-numbering from 1) |
+| Unordered item — `<one:List><one:Bullet>` + text | `- text` (literal dash + space, NOT a list) |
+| Nested `<one:OEChildren>` inside a cell | indent with **2 spaces per level**, same as outside tables |
+
+**Mixed nested trees inside a cell** — when a cell contains a multi-level tree mixing to-dos, ordered items, and plain text (very common in OneNote — e.g. a 2-column table whose content column holds a whole task tree), render the tree **inline inside the cell** as a text tree using `↳` (U+21B3) at each nesting level:
+
+- Top-level items are joined by `<br>`.
+- Each nesting level is prefixed by `↳ ` (one `↳` per level, with a leading space per level).
+- Markers are kept: `[ ]`/`[x]` for to-dos, `1.`/`2.` or the literal `text` attribute for ordered, `-` for unordered.
+- Cell content that is only plain text stays as-is.
+
+Example — a cell containing:
+```
+[ ] I17情况追踪
+  ↳ [x] 基本情况与进度
+  ↳ [ ] 测试阶段
+[x] 2026年IT预算
+```
+becomes: `[ ] I17情况追踪<br>↳ [x] 基本情况与进度<br>↳ [ ] 测试阶段<br>[x] 2026年IT预算`
+
+When a whole row (or the whole table) is just a list/tree with no real tabular structure (e.g. a single column of to-dos used as a checklist), the agent **may** extract it from the table and render it as a native Markdown list below the table, keeping a stub cell in the table — flag this in the final report.
+
+**Fallback — anything not covered above:** if a cell contains a structure none of the rules above handle, do NOT guess or drop content. Export conservatively: a plain Markdown table cell with **every text fragment joined by `<br>`**, in source order, stripping only markup. The goal is zero text loss — every word stays inside the table even if the structure flattens. Note the cell in the final report as "fallback-rendered".
 | `<one:Image>` | skip (not extracted yet) |
 
 Structure notes:
